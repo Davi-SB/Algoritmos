@@ -1,88 +1,65 @@
 #include <iostream>
 using namespace std;
 
-// i_i --> index inicial
-// i_f --> index final
-// copy origemArr[i_i_origem..i_f_origem] to destinoArr[i_i_destino..(i_i_destino+(i_f_origem-i_i_origem))]
-void InsertArray(int origemArr[], int i_i_origem, int i_f_origem, int destinoArr[], int i_i_destino) {
-    while (i_i_origem <= i_f_origem) {
-        destinoArr[i_i_destino] = origemArr[i_i_origem];
-        i_i_origem++; 
-        i_i_destino++;
-    }
-}
+void Merge(int arr[], int left, int mid, int right) {
+    int sizeL = mid - left + 1; // +1 inclui o elemento mid
+    int sizeR = right - mid;
 
-void CustomMalloc(int*& pointer, int size) {
-    pointer = new int[size];
-    if (pointer == nullptr) {
-        cout << "Erro na alocacao de memoria" << endl;
-        exit(1);
-    }
-}
+    int L[sizeL], R[sizeR];
 
-//Merges two sorted arrays into one sorted array
-//Input: Arrays B[0..p − 1] and C[0..q − 1] both sorted
-//Output: Sorted array A[0..p + q − 1] of the elements of B and C
-void Merge(int B[], int sizeB, int C[], int sizeC, int A[]) { // B e C sao arrays previamente ordenados, a recursividade garante isso. A eh o array que recebera o merge de B e C. sizeB + sizeC == sizeA
-    int i=0, j=0, k=0; // i --> index que progride em B // j --> em C // k --> em A
-    while((i < sizeB) && (j < sizeC)) { // roda enquanto nao chegar no ultimo elemento de um dos arrays
-        if(B[i] <= C[j]) {
-            A[k] = B[i];
-            i++;
+    for (int i = 0; i < sizeL; i++) { // copia os elementos de arr para os aux L e R
+        L[i] = arr[left + i];
+    }
+    for (int i = 0; i < sizeR; i++) {
+        R[i] = arr[mid+1 + i];
+    }
+    
+    int indexL = 0, indexR = 0, indexArr = left;
+    
+    while ((indexL < sizeL) && (indexR < sizeR)) {
+        if(L[indexL] <= R[indexR]) {
+            arr[indexArr] = L[indexL];
+            indexL++;
         }
         else {
-            A[k] = C[j];
-            j++;
+            arr[indexArr] = R[indexR];
+            indexR++;
         }
-        k++;
+        indexArr++;
     }
-
-    while (i < sizeB) {
-        A[k] = B[i];
-        i++;
-        k++;
+    
+    while(indexL < sizeL) {
+        arr[indexArr] = L[indexL];
+        indexL++;
+        indexArr++;
     }
-    while (j < sizeC) {
-        A[k] = C[j];
-        j++;
-        k++;
+    while(indexR < sizeR) {
+        arr[indexArr] = R[indexR];
+        indexR++;
+        indexArr++;
     }
 }
 
-void MergeSort(int A[], int n) {
-    if (n > 1) { // controla a recursao
-        int *B = nullptr, *C = nullptr;
-        int sizeB, sizeC;
+void MergeSort(int arr[], int left, int right) {
+    if(left < right) {
+        int mid = left + (int)((right - left) / 2); // ((right - left) / 2) == metade da variacao
 
-        CustomMalloc(B, (n/2));
-        CustomMalloc(C, n-(n/2));
-        sizeB = n/2;
-        sizeC = n-(n/2);
+        MergeSort(arr, left, mid); // mid-1 daria problema quando m == 0
+        MergeSort(arr, mid+1, right);
 
-        InsertArray(A, 0, (sizeB-1), B, 0);
-        InsertArray(A, sizeB, (n-1), C, 0);
-
-        MergeSort(B, sizeB);
-        MergeSort(C, sizeC);
-        Merge(B, sizeB, C, sizeC, A);
-
-        delete[] B;
-        delete[] C;
+        Merge(arr, left, mid, right);
     }
 }
 
 int main() {
+    int arr[] = {89, 34, 68, 90, 29, 34, 17}; // expected output: 17 29 34 34 68 89 90
+    int size = sizeof(arr)/sizeof(int);
 
-    int arr[] = {89, 34, 68, 90, 29, 34, 17};
-    int n = sizeof(arr)/sizeof(int);
-
-    MergeSort(arr, n);
+    MergeSort(arr, 0, size-1);
 
     for(int x : arr) {
         cout << x << " ";
-    }
-    cout << endl;
+    } cout << endl;
 
-    // expected output: 17 29 34 34 68 89 90
     return 0;
 }
