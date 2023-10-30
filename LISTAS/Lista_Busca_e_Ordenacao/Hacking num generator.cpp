@@ -3,6 +3,7 @@
 using namespace std;
 
 // B - Hacking the random number generator
+// nao resolvida
 
 int main() {
     int n, k, cont=0; 
