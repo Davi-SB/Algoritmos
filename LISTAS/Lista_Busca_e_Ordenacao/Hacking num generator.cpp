@@ -3,7 +3,7 @@
 using namespace std;
 
 // B - Hacking the random number generator
-// nao resolvida
+// nao resolvida - time exceeded: aplicar binary search e quick/merge sort
 
 int main() {
     int n, k, cont=0; 
