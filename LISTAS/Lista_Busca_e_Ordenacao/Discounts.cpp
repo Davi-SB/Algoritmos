@@ -1,60 +1,54 @@
 #include <iostream>
 using namespace std;
 
-// Discounts - nao resolvida
+// Discounts - RESOLVIDA
 // https://codeforces.com/problemset/problem/1132/B
 
-void Merge(long long int arr[], long long int left, long long int right, long long int size) {
-    // obs: se atentar com a inicializacao e condicao de parada dos for dessa funcao    
-    long long int mid = ((left + right) / 2); // metade do subarrray
-    long long int index1 = left, index2 = mid+1; // index inicial de cada um dos dois subarrays. sub1[left..mid], sub2[mid+1..right]
-    long long int temp[size];
-
-    for (long long int i = left; i <= right; i++){ temp[i] = arr[i]; } // copia os elementos em questão de arr para temp na mesma posicao
-    
-    for (long long int curr = left; curr <= right; curr++) {
-        if(index1 > mid) arr[curr] = temp[index2++]; // atribui o resto. (index1 > mid) significa que index1 invadiu sub2
-        else if(index2 > right) arr[curr] = temp[index1++]; // atribui o resto. (index2 > right) significa que index2 ja esgotou sub2
-
-        else if(temp[index1] <= temp[index2]) arr[curr] = temp[index1++];
-        else arr[curr] = temp[index2++];
-    }   
+void SwapInt(long long int arr[], long long int i, long long int j) {
+    long long int aux = arr[i]; arr[i] = arr[j]; arr[j] = aux;
 }
 
-void MergeSort(long long int arr[], long long int left, long long int right, long long int size) {
+long long int Partition(long long int arr[], long long int left, long long int right) {
+    long long int pivot = arr[left];
+    long long int i = left, j = right+1;
+    do {
+        do {
+            i++;
+        } while((arr[i] < pivot) && (i < right)); // enquanto os elementos mais da *esquerda* forem *menores* que o pivot               
+        do {
+            j--;
+        } while(arr[j] > pivot); // enquanto os elementos mais da *direita* forem *maiores* que o pivot
+        SwapInt(arr, i, j); // swap arr[i] e arr[j]
+    } while(i < j);
+    SwapInt(arr, i, j); // undo-swap arr[i] e arr[j] // desfazer ultimo swap. esse eh sempre um excesso. quando i>=j
+    SwapInt(arr, left, j); // swap arr[left] e arr[j]. manda o pivot pra posicao correta
+    return j; // index do pivot ao fim da particao, a poosicao correta que ele ja esta
+}
+
+void QuickSort(long long int arr[], long long int left, long long int right) {
     if(left < right) {
-        long long int mid = ((left + right) / 2); // metade do subarrray
-
-        MergeSort(arr, left, mid, size); // mid-1 daria problema quando m == 0
-        MergeSort(arr, mid+1, right, size);
-
-        Merge(arr, left, right, size);
+        long long int s = Partition(arr, left, right);
+        QuickSort(arr, left, s-1);
+        QuickSort(arr, s+1, right);
     }
 }
 
 int main() {
-
     long long int n; // number of chocolate bars in the shop
     long long int m; // (1 <= m <= n−1) the number of coupons you have
     long long int sum=0;
-
     cin >> n;
     long long int barsPrice[n];
-
     for (long long int i = 0; i < n; i++) { 
         cin >> barsPrice[i];
         sum += barsPrice[i];
     }
-
-    MergeSort(barsPrice, 0, n-1, n);
-    
+    QuickSort(barsPrice, 0, n-1);   
     cin >> m;
-
     for (long long int i = 0; i < m; i++) { 
         long long int cupon;
         cin >> cupon;
         cout << (sum - barsPrice[(n-cupon)]) << endl;
     }
-
     return 0;
 }
