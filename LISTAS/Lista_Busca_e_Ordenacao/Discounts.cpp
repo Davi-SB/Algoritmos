@@ -49,13 +49,12 @@ int main() {
     MergeSort(barsPrice, 0, n-1, n);
     
     cin >> m;
-    long long int cupons[m];
 
     for (long long int i = 0; i < m; i++) { 
-        cin >> cupons[i];
-        cout << (sum - barsPrice[(n-cupons[i])]) << endl;
+        long long int cupon;
+        cin >> cupon;
+        cout << (sum - barsPrice[(n-cupon)]) << endl;
     }
-
 
     return 0;
 }
