@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-// Hacking the random number generator - RESOLVIDA
+// Hacking the random number generator - SOLVED
 // https://www.spoj.com/problems/HACKRNDM/
 
 void Merge(int arr[], int left, int right, int size) {   
