@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-// Discounts - RESOLVIDA
+// Discounts - SOLVED
 // https://codeforces.com/problemset/problem/1132/B
 
 void SwapInt(long long int arr[], long long int i, long long int j) {

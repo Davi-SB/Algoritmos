@@ -8,7 +8,7 @@ void Merge(int arr[], int left, int right, int size) {
 
     for (int i = left; i <= right; i++){ // for de inicio e fim nao convencionais
         temp[i] = arr[i];
-    }
+    }    
 
     for (int curr = left; curr <= right; curr++) { // for de inicio e fim nao convencionais
         if(i1==mid+1) arr[curr] = temp[i2++];
