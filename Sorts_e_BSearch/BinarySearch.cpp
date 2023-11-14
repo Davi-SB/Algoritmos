@@ -7,7 +7,7 @@ int BinarySearch(int arr[], int size, int key) {
     while (left <= right) { // enquando os indices nao se cruzam
         int mid = (int)(left + right) / 2;
 
-        if(key == arr[mid]) return key;
+        if(key == arr[mid]) return mid;
 
         else if(key < arr[mid]) right = mid-1;
         else left = mid+1;
