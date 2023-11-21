@@ -35,23 +35,24 @@ void Push (LinkedStack* s, E it) {
 E Pop (LinkedStack* s) { // remove top->element
     if(s->top == nullptr) { cout << "erro\n"; return; }
     E it = s->top->element;
+
+    Node* temp = s->top; // guarda o endereco do top atual
     s->top = s->top->Pnext;
+    delete temp; // libera ele
+
     s->size--;
+    delete temp;
     return it;
 }
 
 void PrintStack(LinkedStack* s) {
-    
-    if (s == nullptr || s->top == nullptr) {
-        cout << "Stack is empty." << endl;
-        return;
-    }
+    if (s == nullptr || s->top == nullptr) { cout << "Stack is empty" << endl; return; }
 
     Node* temp = s->top;
 
     cout << "Stack: ";
     for(int i = s->size; i>0; i--) {
-        cout << temp->element << " ";
+        cout << temp->element << " "; // comeca printando, NAO tem header node
         temp = temp->Pnext;
     } cout << endl;
     temp = nullptr;

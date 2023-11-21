@@ -114,36 +114,36 @@ int main() {
 
     Insert(myList, 10);
     PrintList(myList);
-    cout << "Curr: " << myList->curr->element << endl; cout << "Head: " << myList->head->Pnext->element << endl; cout << "Tail: " << myList->tail->element << endl << endl;
+    cout << "Curr: " << myList->curr->element << endl << "Head next element: " << myList->head->Pnext->element << endl << "Tail: " << myList->tail->element << endl << endl;
 
     Insert(myList, 20);
     PrintList(myList);
-    cout << "Curr: " << myList->curr->element << endl; cout << "Head: " << myList->head->Pnext->element << endl; cout << "Tail: " << myList->tail->element << endl << endl;
+    cout << "Curr: " << myList->curr->element << endl << "Head next element: " << myList->head->Pnext->element << endl << "Tail: " << myList->tail->element << endl << endl;
 
     Insert(myList, 30);
     PrintList(myList);
-    cout << "Curr: " << myList->curr->element << endl; cout << "Head: " << myList->head->Pnext->element << endl; cout << "Tail: " << myList->tail->element << endl << endl;
+    cout << "Curr: " << myList->curr->element << endl << "Head next element: " << myList->head->Pnext->element << endl << "Tail: " << myList->tail->element << endl << endl;
 
     Append(myList, 123);
     PrintList(myList);
-    cout << "Curr: " << myList->curr->element << endl; cout << "Head: " << myList->head->Pnext->element << endl; cout << "Tail: " << myList->tail->element << endl << endl;
+    cout << "Curr: " << myList->curr->element << endl << "Head next element: " << myList->head->Pnext->element << endl << "Tail: " << myList->tail->element << endl << endl;
 
     Pnext(myList);
     Pnext(myList);
     Insert(myList, 555);
     PrintList(myList);
-    cout << "Curr: " << myList->curr->element << endl; cout << "Head: " << myList->head->Pnext->element << endl; cout << "Tail: " << myList->tail->element << endl << endl;
+    cout << "Curr: " << myList->curr->element << endl << "Head next element: " << myList->head->Pnext->element << endl << "Tail: " << myList->tail->element << endl << endl;
 
     MoveToStart(myList);
     Insert(myList, 1);
     PrintList(myList);
-    cout << "Curr: " << myList->curr->element << endl; cout << "Head: " << myList->head->Pnext->element << endl; cout << "Tail: " << myList->tail->element << endl << endl;
+    cout << "Curr: " << myList->curr->element << endl << "Head next element: " << myList->head->Pnext->element << endl << "Tail: " << myList->tail->element << endl << endl;
 
     Pnext(myList);
     Pnext(myList);
     Remove(myList);
     PrintList(myList);
-    cout << "Curr: " << myList->curr->element << endl; cout << "Head: " << myList->head->Pnext->element << endl; cout << "Tail: " << myList->tail->element << endl << endl;
+    cout << "Curr: " << myList->curr->element << endl << "Head next element: " << myList->head->Pnext->element << endl << "Tail: " << myList->tail->element << endl << endl;
 
     DeleteList(myList);
     return 0;
