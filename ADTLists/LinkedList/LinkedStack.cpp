@@ -33,7 +33,7 @@ void Push (LinkedStack* s, E it) {
 }
 
 E Pop (LinkedStack* s) { // remove top->element
-    if(s->top == nullptr) { cout << "erro\n"; return; }
+    if(s->top == nullptr) { cout << "erro\n"; return '1'; }
     E it = s->top->element;
 
     Node* temp = s->top; // guarda o endereco do top atual
