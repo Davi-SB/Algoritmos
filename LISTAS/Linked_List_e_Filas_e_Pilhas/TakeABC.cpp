@@ -1,8 +1,10 @@
 #include <iostream>
 using namespace std;
-
 #define E char
 #define endl '\n'
+
+// Take ABC - SOLVED
+// https://atcoder.jp/contests/abc328/tasks/abc328_d
 
 typedef struct node {
     E element;
