@@ -2,6 +2,7 @@
 using namespace std;
 
 #define E char
+#define endl '\n'
 
 typedef struct node {
     E element;

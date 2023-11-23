@@ -1,1 +1,4 @@
-AAABCABCABCAABCABCBBBAABCBCCCAAABCBCBCC
+3
+(a+(b*c))
+((a+b)*(z+x))
+((a+t)*((b+(a+c))^(c+d)))
