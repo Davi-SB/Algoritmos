@@ -124,3 +124,4 @@ int main() {
 }
 
 // g++ TakeABC.cpp -o ABC && ./ABC < input.txt
+// https://atcoder.jp/contests/abc328/tasks/abc328_d
