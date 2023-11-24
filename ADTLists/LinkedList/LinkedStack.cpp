@@ -62,8 +62,8 @@ void DeleteList(LinkedStack* s) { // libera memoria alocada para a lista e os no
     while (s->size > 0) {
         Node* temp = s->top; // temp recece a top inicial/atual
         s->top = s->top->Pnext; // top passa a apontar para o proximo
-        delete temp;
         s->size--;
+        delete temp;
     }
     s->top = nullptr;
     delete s; // s eh um ponteiro que foi alocado com new

@@ -63,6 +63,7 @@ void Pnext(LinkedList* l) {
 }
 
 E Remove(LinkedList* l) { // remove o elemento NA FRENTE DO CURSOR
+    if(l->curr->Pnext == nullptr) return -1;
     E it = l->curr->Pnext->element;
     Node* temp = l->curr->Pnext;
 
