@@ -1,8 +1,4 @@
-#include <bits/stdc++.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
+#include <iostream>
 using namespace std;
 
 #define TABLE_SIZE 10
@@ -10,26 +6,22 @@ using namespace std;
 typedef struct {
     int key;
     int value;
-    bool occupied;
-} HashEntry;
+    bool occupied; // se ocupado, nao inserir (insert). diz se o valor eh relevante
+    bool unsealed; // se deslacrado, continuar procurando. uma vez deslacrado, nunca mais volta a ser como era antes. 
+} TableElement;
 
 typedef struct {
-    HashEntry entries[TABLE_SIZE];
-    int perm[TABLE_SIZE-1];
+    TableElement table[TABLE_SIZE];
     int maxSize;
     int count;
 } HashTable;
 
-HashTable* initHashTable() {
+HashTable* InitHashTable() {
     HashTable* ht = new HashTable;
     
     for (int i = 0; i < TABLE_SIZE; ++i) { // inicializa todos os occupied como false
-        ht->entries[i].occupied = false;
-    }
-    
-    int tempPerm[] = {2,6,7,3,1,4,5,9,8};
-    for (int i = 0; i < (TABLE_SIZE-1); i++) { // preenche o vetor perm
-        ht->perm[i] = tempPerm[i];    
+        ht->table[i].occupied = false;
+        ht->table[i].unsealed = false;
     }
 
     ht->maxSize = TABLE_SIZE;
@@ -37,81 +29,86 @@ HashTable* initHashTable() {
     return ht;
 }
 
-int HashFunction(int key) {
+int HashFunction(int key) { // nao muito eficiente. usada apenas para fins de estudo
     return key % TABLE_SIZE;
 }
 
-void insert_linearProbing(HashTable* ht, int key, int value) { // checar se nao esta cheio antes de inserir e se o elemento nao eh repetido
-    if(ht->count >= ht->maxSize || find(ht, key)) return; // checar se nao esta cheio antes de inserir e se o elemento nao eh repetido
+int Find(HashTable* ht, int key) {
+    int index = HashFunction(key);
+    if (ht->table[index].key == key && ht->table[index].occupied) return index;
+
+    int newIndex = (index + 1) % ht->maxSize;
+
+    while (newIndex != index) {
+        if (ht->table[newIndex].key == key && ht->table[newIndex].occupied) return newIndex;
+        newIndex = (newIndex + 1) % ht->maxSize;
+    }
+    return -1; // retorna -1 se a chave nao for encontrada na tabela
+}
+
+void Insert_linearProbing(HashTable* ht, int key, int value) {
+    if ((ht->count >= ht->maxSize) || (Find(ht, key) != -1)) return; // checa se esta cheio antes de inserir ou se o elemento ja existe
 
     int index = HashFunction(key);
 
-    while (ht->entries[index].occupied) { // verifica se ja pode inserir
-        // Linear probing: move to the next slot
-        index = (index + 1) % TABLE_SIZE;
+    if (ht->table[index].occupied) {
+        int newIndex = (index + 1) % ht->maxSize;
+
+        while (ht->table[newIndex].occupied) {
+            newIndex = (newIndex + 1) % ht->maxSize; // itera ate encontrar um slot vazio
+        }
+        index = newIndex;
     }
 
-    ht->entries[index].key = key;
-    ht->entries[index].value = value;
-    ht->entries[index].occupied = true;
+    ht->table[index].key = key;
+    ht->table[index].value = value;
+    ht->table[index].occupied = ht->table[index].unsealed = true;
     ht->count++;
 }
 
-/*
-void insert(HashTable* ht, int key, int value) {
-    unsigned int index = HashFunction(key);
+int RemoveMelhorado(HashTable* ht, int key) {
+    int index = Find(ht, key);
+    if(index == -1) { cout << "RemoveMelhorado nao encontrou elemento para remover" << endl; return -1; }
 
-    while (ht->entries[index].occupied) {
-        // Linear probing: move to the next slot
-        index = (index + 1) % TABLE_SIZE;
-    }
-
-    ht->entries[index].key = key;
-    ht->entries[index].value = value;
-    ht->entries[index].occupied = true;
-}
-*/
-
-bool find(HashTable* ht, int key, int* value) {
-    unsigned int index = HashFunction(key);
-    unsigned int originalIndex = index;
-
-    while (ht->entries[index].occupied) {
-        if (ht->entries[index].key == key) {
-            *value = ht->entries[index].value;
-            return true;
-        }
-        // Linear probing: move to the next slot
-        index = (index + 1) % TABLE_SIZE;
-
-        // If we've checked all slots and looped back to the start, break to avoid infinite loop
-        if (index == originalIndex) {
-            break;
-        }
-    }
-
-    return false;
+    ht->table[index].occupied = false; // lazy deletion!!
+    ht->count--;
+    return ht->table[index].value;
 }
 
 int main() {
-    HashTable *myHashTable = initHashTable();
+    HashTable* ht = InitHashTable();
 
-    insert(&myHashTable, 5, 100);
-    insert(&myHashTable, 15, 200);
-    insert(&myHashTable, 25, 300);
+    Insert_linearProbing(ht, 5, 100);
+    Insert_linearProbing(ht, 15, 200);
+    Insert_linearProbing(ht, 25, 300);
 
-    int val;
-    if (find(&myHashTable, 15, &val)) {
-        printf("Value found: %d\n", val);
-    } else {
-        printf("Value not found.\n");
-    }
+    cout << "HF 5: " << HashFunction(5) << endl;
+    cout << "HF 15: " << HashFunction(15) << endl;
+    cout << "HF 25: " << HashFunction(25) << endl;
 
-    if (find(&myHashTable, 8, &val)) {
-        printf("Value found: %d\n", val);
-    } else {
-        printf("Value not found.\n");
-    }
+    cout << "index do 5: " << Find(ht, 5) << endl;
+    cout << "index do 15: " << Find(ht, 15) << endl;
+    cout << "index do 25: " << Find(ht, 25) << endl;
 
+    if (Find(ht, 8) != -1) cout << "Key 8 found" << endl;
+    else cout << "Key 8 not found" << endl; // Deve imprimir "Key 8 not found"
+
+    if (Find(ht, 5) != -1) cout << "Key 5 found" << endl; // Deve imprimir "Key 5 found"
+    else cout << "Key 5 not found" << endl; 
+
+    RemoveMelhorado(ht, 5);
+
+    if (Find(ht, 5) != -1) cout << "Key 5 found" << endl;
+    else cout << "Key 5 not found" << endl; // Deve imprimir "Key 5 not found"
+
+    if (Find(ht, 25) != -1) cout << "Key 25 found" << endl; // Deve imprimir "Key 25 found"
+    else cout << "Key 25 not found" << endl; 
+
+    RemoveMelhorado(ht, 25);
+
+    if (Find(ht, 25) != -1) cout << "Key 25 found" << endl;
+    else cout << "Key 25 not found" << endl; // Deve imprimir "Key 25 not found"
+
+    delete ht;
     return 0;
 }

@@ -1,8 +1,4 @@
-#include <bits/stdc++.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
+#include <iostream>
 using namespace std;
 
 #define TABLE_SIZE 10
@@ -39,7 +35,7 @@ HashTable* InitHashTable() {
     return ht;
 }
 
-int HashFunction(int key) {
+int HashFunction(int key) { // nao muito eficiente. usada apenas para fins de estudo
     return key % TABLE_SIZE;
 }
 
@@ -58,7 +54,7 @@ int Find(HashTable* ht, int key) { // retorna o indice da key no array de table 
         if(!ht->table[newIndex].unsealed) return -1; // se um indice NAO usado foi encontrado, ja pode parar a busca
         //
         if (ht->table[newIndex].key == key && ht->table[newIndex].occupied) return newIndex;
-    } while (i < (TABLE_SIZE-1)); // while (newIndex != index); funcionaria??????????
+    } while (i < (TABLE_SIZE-1));
 
     return -1;
 }
@@ -71,7 +67,6 @@ void Insert_randomProbing(HashTable* ht, int key, int value) {
     if(ht->table[index].occupied) {
         int i = 0;
         int newIndex;
-
         do {
             i++;    
             int offset = ht->perm[i-1];
@@ -87,9 +82,9 @@ void Insert_randomProbing(HashTable* ht, int key, int value) {
     ht->count++;
 }
 
-int RemoveMelhorado(HashTable* ht, int key) {
+int Remove(HashTable* ht, int key) {
     int index = Find(ht, key);
-    if(index == -1) { cout << "RemoveMelhorado nao encontrou elemento para remover" << endl; return -1; }
+    if(index == -1) { cout << "Remove nao encontrou elemento para remover" << endl; return -1; }
 
     ht->table[index].occupied = false; // lazy deletion!!
     ht->count--;
@@ -112,115 +107,24 @@ int main() {
     cout << "index do 25: " << Find(ht, 25) << endl;
 
     if (Find(ht, 8) != -1) cout << "Key 8 found" << endl;
-    else cout << "Key 8 not found" << endl; // Deve imprimir "Key 8 not found"
+    else cout << "Key 8 not found" << endl; // Key 8 not found
 
-    if (Find(ht, 5) != -1) cout << "Key 5 found" << endl; // Deve imprimir "Key 5 found"
+    if (Find(ht, 5) != -1) cout << "Key 5 found" << endl; // Key 5 found
     else cout << "Key 5 not found" << endl; 
 
-    RemoveMelhorado(ht, 5);
-    if (Find(ht, 5) != -1) cout << "Key 5 found" << endl;
-    else cout << "Key 5 not found" << endl; // Deve imprimir "Key 5 not found"
+    Remove(ht, 5);
 
-    if (Find(ht, 25) != -1) cout << "Key 25 found" << endl; // Deve imprimir "Key 25 found"
+    if (Find(ht, 5) != -1) cout << "Key 5 found" << endl;
+    else cout << "Key 5 not found" << endl; // Key 5 not found
+
+    if (Find(ht, 25) != -1) cout << "Key 25 found" << endl; // Key 25 found
     else cout << "Key 25 not found" << endl; 
 
-    RemoveMelhorado(ht, 25);
+    Remove(ht, 25);
+
     if (Find(ht, 25) != -1) cout << "Key 25 found" << endl;
-    else cout << "Key 25 not found" << endl; // Deve imprimir "Key 25 not found"
+    else cout << "Key 25 not found" << endl; // Key 25 not found
 
     delete ht;
     return 0;
 }
-
-/*
-void Remove(HashTable* ht, int key) {
-    int index = HashFunction(key);
-
-    if (ht->table[index].key == key && ht->table[index].occupied) {
-        ht->table[index].occupied = false;
-        ht->count--;
-        return;
-    }
-
-    int i = 0;
-    int newIndex;
-    do {
-        i++;
-        int offset = ht->perm[i-1];
-        newIndex = (index + offset) % ht->maxSize;
-
-        if (ht->table[newIndex].key == key && ht->table[newIndex].occupied) {
-            ht->table[newIndex].occupied = false;
-            ht->count--;
-            return;
-        }
-    } while (i < (TABLE_SIZE-1)); // while (newIndex != index); funcionaria??????????
-}
-*/
-
-/*
-void remove(HashTable* ht, int key) {
-    int index = HashFunction(key);
-
-    if (ht->table[index].key == key && ht->table[index].occupied) {
-        ht->table[index].occupied = false;
-        ht->count--;
-        return;
-    }
-
-    int i = 0;
-    int newIndex;
-    do {
-        i++;
-        int offset = ht->perm[i - 1];
-        newIndex = (index + offset) % ht->maxSize;
-        if (ht->table[newIndex].key == key && ht->table[newIndex].occupied) {
-            ht->table[newIndex].occupied = false;
-            ht->count--;
-            return;
-        }
-    } while (newIndex != index);
-}
-*/
-
-
-/*
-unsigned int pseudoRandomProbing(int key, int i) {
-    return (hashFunction(key) + i * (PRIME - (key % PRIME))) % TABLE_SIZE;
-}
-
-void insert(HashTable* ht, int key, int value) {
-    unsigned int index = hashFunction(key);
-
-    int i = 0;
-    while (ht->table[index].occupied) {
-        index = pseudoRandomProbing(key, i);
-        i++;
-    }
-
-    ht->table[index].key = key;
-    ht->table[index].value = value;
-    ht->table[index].occupied = true;
-}
-*/
-
-/*
-bool find(HashTable* ht, int key) {
-    int index = HashFunction(key);
-
-    if (ht->table[index].key == key && ht->table[index].occupied)
-        return true;
-
-    int i = 0;
-    int newIndex;
-    do {
-        i++;
-        int offset = ht->perm[i - 1];
-        newIndex = (index + offset) % ht->maxSize;
-        if (ht->table[newIndex].key == key && ht->table[newIndex].occupied)
-            return true;
-    } while (newIndex != index);
-
-    return false;
-}
-*/
