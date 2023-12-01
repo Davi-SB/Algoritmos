@@ -96,5 +96,37 @@ int main() {
     delete stack;
     return 0;
 }
-// g++ EP2.cpp -o EP2
-// g++ EP2.cpp -o EP2 && ./EP2 < input.txt
+
+/*
+Ao representar expressões na notação pós-fixa, os operadores aparecem após os operandos. 
+Por exemplo, a expressão infixa 3 + (4 * 2) é equivalente à expressão pós-fixa 3 4 2 * +. 
+Já a expressão infixa (3 + 4) * 2 é equivalente à expressão pós-fixa 3 4 + 2 *.
+
+Input Specification
+A entrada consiste em múltiplas expressões em notação pós-fixa, uma por linha. Todas as 
+expressões são bem formadas. Em cada expressão, os operandos e operadores são separados 
+por espaços. Os operandos são números inteiros. Os operadores são +, - ou * e todos são 
+binários (atuam sobre dois operandos). O final de uma expressão é representado pela 
+string “END”. O final da entrada é representado pela string “EOF”.
+
+Output Specification
+Para cada expressão, imprima o valor resultante da sua avaliação. O tipo inteiro 
+(32 bits) tem precisão suficiente para armazenar o resultado da avaliação de 
+qualquer expressão da entrada.
+
+Sample input:
+3 4 2 * + END
+3 4 + 2 * END
+3 4 2 * - END
+3 4 - 2 * END
+-10 -2 * -10 - END
+EOF
+
+Sample output:
+11
+14
+-5
+-2
+30
+
+*/
