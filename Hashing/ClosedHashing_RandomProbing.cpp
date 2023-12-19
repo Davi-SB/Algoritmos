@@ -60,7 +60,7 @@ int Find(HashTable* ht, int key) { // retorna o indice da key no array de table 
 }
 
 void Insert_randomProbing(HashTable* ht, int key, int value) {
-    if((ht->count >= ht->maxSize) || (Find(ht, key) > 0)) return; // checa se nao esta cheio antes de inserir e se o elemento nao eh repetido
+    if((ht->count >= ht->maxSize) || (Find(ht, key) != -1)) return; // checa se nao esta cheio antes de inserir e se o elemento nao eh repetido
 
     int index = HashFunction(key);
 
