@@ -62,6 +62,17 @@ BSTNode* DeleteMin(BSTNode* rt) {
     return rt;
 }
 
+BSTNode* DeleteMinGPT(BSTNode* rt) {
+    if(rt->left == nullptr) {
+        BSTNode* temp = rt->right;
+        delete rt; // Deleting the node to free memory
+        return temp;
+    }
+    rt->left = DeleteMin(rt->left);
+    return rt;
+}
+
+
 BSTNode* RemoveHelp(BSTNode* rt, int k) {
     if(rt == nullptr) return NULL;
     if(rt->key > k) rt->left = RemoveHelp(rt->left, k);
