@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-#define E int
+#define E char
 
 typedef struct bstnode {
     int key;
@@ -57,12 +57,6 @@ BSTNode* GetMin(BSTNode* rt) {
 }
 
 BSTNode* DeleteMin(BSTNode* rt) {
-    if(rt->left == nullptr) return rt->right;
-    rt->left = DeleteMin(rt->left);
-    return rt;
-}
-
-BSTNode* DeleteMinGPT(BSTNode* rt) {
     if(rt->left == nullptr) {
         BSTNode* temp = rt->right;
         delete rt; // Deleting the node to free memory
@@ -71,7 +65,6 @@ BSTNode* DeleteMinGPT(BSTNode* rt) {
     rt->left = DeleteMin(rt->left);
     return rt;
 }
-
 
 BSTNode* RemoveHelp(BSTNode* rt, int k) {
     if(rt == nullptr) return NULL;
@@ -107,7 +100,7 @@ E remove(BST* bst, int k) {
     return temp;
 }
 
-E PosOrderDelete(BSTNode* rt) {
+void PosOrderDelete(BSTNode* rt) {
     if(rt != nullptr) {
         PosOrderDelete(rt->left);
         PosOrderDelete(rt->right);
@@ -120,9 +113,31 @@ void DeleteBST(BST* bst) {
     delete bst;
 }
 
+void InOrderPrintHelp(BSTNode* rt) {
+    if(rt != nullptr) {
+        InOrderPrintHelp(rt->left);
+        cout << "<" << rt->key << ", " << rt->element << ">  ";
+        InOrderPrintHelp(rt->right);
+    }
+}
+
+void InOrderPrint(BST* bst) {
+    cout << "----------------" << endl;
+    InOrderPrintHelp(bst->root);
+    cout << endl << "----------------" << endl;
+}
+
 int main () {
+    BST* bst = CreateBST();
 
+    Insert(bst, 5, 'e');   
+    Insert(bst, 4, 't');
+    Insert(bst, 1, 't');
+    Insert(bst, 2, 'e');
+    Insert(bst, 3, 's');
 
+    InOrderPrint(bst);
 
+    DeleteBST(bst);
     return 0;
 }
