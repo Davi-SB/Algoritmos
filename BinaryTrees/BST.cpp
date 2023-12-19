@@ -122,21 +122,53 @@ void InOrderPrintHelp(BSTNode* rt) {
 }
 
 void InOrderPrint(BST* bst) {
-    cout << "----------------" << endl;
+    cout << "--------IN-ORDER--------" << endl;
     InOrderPrintHelp(bst->root);
-    cout << endl << "----------------" << endl;
+    cout << endl << "------------------------" << endl << endl;
+}
+
+void PreOrderPrintHelp(BSTNode* rt) {
+    if(rt != nullptr) {
+        cout << "<" << rt->key << ", " << rt->element << ">  ";
+        PreOrderPrintHelp(rt->left);
+        PreOrderPrintHelp(rt->right);
+    }
+}
+
+void PreOrderPrint(BST* bst) {
+    cout << "--------PRE-ORDER--------" << endl;
+    PreOrderPrintHelp(bst->root);
+    cout << endl << "-------------------------" << endl << endl;
+}
+
+void PosOrderPrintHelp(BSTNode* rt) {
+    if(rt != nullptr) {
+        PosOrderPrintHelp(rt->left);
+        PosOrderPrintHelp(rt->right);
+        cout << "<" << rt->key << ", " << rt->element << ">  ";
+    }
+}
+
+void PosOrderPrint(BST* bst) {
+    cout << "--------PRE-ORDER--------" << endl;
+    PosOrderPrintHelp(bst->root);
+    cout << endl << "-------------------------" << endl << endl;
 }
 
 int main () {
     BST* bst = CreateBST();
 
-    Insert(bst, 5, 'e');   
+    Insert(bst, 5, '_');   
+    Insert(bst, 3, 't');
+    Insert(bst, 7, 'e');
+    Insert(bst, 2, 's');
     Insert(bst, 4, 't');
-    Insert(bst, 1, 't');
-    Insert(bst, 2, 'e');
-    Insert(bst, 3, 's');
+    Insert(bst, 6, 'e');
+    Insert(bst, 8, '_');
 
+    PreOrderPrint(bst);
     InOrderPrint(bst);
+    PosOrderPrint(bst);
 
     DeleteBST(bst);
     return 0;
