@@ -2,10 +2,12 @@
 #include <string>
 using namespace std;
 
+// Hash it! - SOLVED
 // https://www.spoj.com/problems/HASHIT/
 
 #define endl '\n'
 #define TABLE_SIZE 101
+#define TESTES_MAX 20
 
 typedef struct {
     pair<int, string> data;
@@ -17,33 +19,6 @@ typedef struct {
     int maxSize;
     int count;
 } HashTable;
-
-void PairSwap(pair<int, string> arr[], int i, int j) {
-    pair<int, string> temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-}
-
-int Partition(pair<int, string> arr[], int left, int right) {
-    int pivot = arr[left].first;
-    int i = left, j = right+1;
-    do {
-        do { i++; } while((arr[i].first < pivot) && (i < right));
-        do { j--; } while(arr[j].first > pivot);
-        PairSwap(arr, i, j);
-    } while(i < j);
-    PairSwap(arr, i, j);
-    PairSwap(arr, left, j);
-    return j;
-}
-
-void QuickSort(pair<int, string> arr[], int left, int right) {
-    if(left < right) {
-        int s = Partition(arr, left, right);
-        QuickSort(arr, left, s-1);
-        QuickSort(arr, s+1, right);
-    }
-}
 
 HashTable* InitHashTable() {
     HashTable* ht = new HashTable;
@@ -62,7 +37,7 @@ int HashFunction(string element) {
 
 int Find(HashTable* ht, string element, int index) { // retorna o indice da key no array de table se encontrar. se nao, retorna -1
     int j=0, saved = index;
-    while(j < 20) {
+    while(j < TESTES_MAX) {
         index = ((saved+(j*j)+(23*j)) % TABLE_SIZE);
         if(ht->table[index].occupied && (ht->table[index].data.second == element)) return index;
         j++;
@@ -76,8 +51,9 @@ void Insert(HashTable* ht, string element) {
 
     int saved = index;
     int j=1;
-    while(ht->table[index].occupied && (j < 20)) {
+    while(ht->table[index].occupied && (j < TESTES_MAX)) {
         index = ((saved+(j*j)+(23*j)) % TABLE_SIZE);
+        if((j == 19) && ht->table[index].occupied) return;
         j++;
     }
 
@@ -131,11 +107,9 @@ int main() {
 
         cout << ht->count << endl; // first line
         pair<int, string> *data = GetData(ht);
-        QuickSort(data, 0, (ht->count)-1);
         PrintData(data, ht->count); // second line
 
         delete ht;  
-        //if(nTests) cout << endl; //sera????????  
     }
     return 0;
 }
