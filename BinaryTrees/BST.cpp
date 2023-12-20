@@ -91,7 +91,7 @@ BSTNode* RemoveHelp(BSTNode* rt, int k) {
     return rt;
 }
 
-E remove(BST* bst, int k) {
+E Remove(BST* bst, int k) {
     E temp = FindHelp(bst->root, k);
     if(temp != '\0') {
         bst->root = RemoveHelp(bst->root, k);
@@ -164,7 +164,15 @@ int main () {
     Insert(bst, 2, 's');
     Insert(bst, 4, 't');
     Insert(bst, 6, 'e');
-    Insert(bst, 8, '_');
+    Insert(bst, 1, '_');
+
+    PreOrderPrint(bst);
+    InOrderPrint(bst);
+    PosOrderPrint(bst);
+
+    Remove(bst, 4);
+    Remove(bst, 5);
+    Remove(bst, 2);
 
     PreOrderPrint(bst);
     InOrderPrint(bst);
