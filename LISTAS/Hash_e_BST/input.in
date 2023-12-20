@@ -1,4 +1,4 @@
-1
+3
 11
 ADD:marsz
 ADD:marsz
@@ -11,3 +11,16 @@ ADD:Polski
 DEL:od
 DEL:do
 DEL:wloskiej
+5
+ADD:e
+ADD:ee
+ADD:eee
+ADD:eeee
+ADD:eeeee
+6
+ADD:e
+ADD:ee
+DEL:ee
+ADD:eee
+ADD:eeee
+ADD:eeeee
