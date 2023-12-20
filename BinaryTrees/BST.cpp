@@ -150,7 +150,7 @@ void PosOrderPrintHelp(BSTNode* rt) {
 }
 
 void PosOrderPrint(BST* bst) {
-    cout << "--------PRE-ORDER--------" << endl;
+    cout << "--------POS-ORDER--------" << endl;
     PosOrderPrintHelp(bst->root);
     cout << endl << "-------------------------" << endl << endl;
 }

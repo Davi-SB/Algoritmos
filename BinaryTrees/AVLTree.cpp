@@ -49,7 +49,7 @@ AVLNode* RightRotate(AVLNode* rt) {
     AVLNode *l  = rt->left;
     AVLNode *lr = l->right;
     l->right = rt;
-    l->left  = lr;
+    rt->left  = lr;
     rt->height = 1 + max(h(rt->left), h(rt->right));
     l->height =  1 + max(h( l->left), h( l->right));
     return l; // nova raiz da subarvore em questao
@@ -59,10 +59,10 @@ AVLNode* LeftRotate(AVLNode* rt) {
     AVLNode *r  = rt->right;
     AVLNode *rl = r->left;
     r->left  = rt;
-    r->right = rl;
+    rt->right = rl;
     rt->height = 1 + max(h(rt->left), h(rt->right));
-    l->height =  1 + max(h( l->left), h( l->right));
-    return l; // nova raiz da subarvore em questao
+    r->height =  1 + max(h( r->left), h( r->right));
+    return r; // nova raiz da subarvore em questao
 }
 
 int GetBalance(AVLNode* rt) {
@@ -112,7 +112,7 @@ AVLNode* DeleteMin(AVLNode* rt) {
 }
 
 AVLNode* RemoveHelp(AVLNode* rt, int k) {
-    if(rt == nullptr) return NULL;
+    if(rt == nullptr) return nullptr;
     if(rt->key > k) rt->left = RemoveHelp(rt->left, k);
     else if(rt->key < k) rt->right = RemoveHelp(rt->right, k);
     else {
@@ -133,10 +133,26 @@ AVLNode* RemoveHelp(AVLNode* rt, int k) {
             rt->right = DeleteMin(rt->right);
         }
     }
+    
+    if(rt == nullptr) return nullptr;
+    
+    rt->height = 1 + max(h(rt->left), h(rt->right));
+    int balance = GetBalance(rt);
+
+    if((balance < -1) && (k >= rt->right->key)) return LeftRotate(rt);
+    if((balance >  1) && (k <  rt->left->key))  return RightRotate(rt);
+    if((balance >  1) && (k >= rt->left->key)) {
+        rt->left = LeftRotate(rt->left);
+        return RightRotate(rt);
+    }
+    if((balance < -1) && (k < rt->right->key)) {
+        rt->right = RightRotate(rt->right);
+        return LeftRotate(rt);
+    }
     return rt;
 }
 
-E remove(AVL* avl, int k) {
+E Remove(AVL* avl, int k) {
     E temp = FindHelp(avl->root, k);
     if(temp != '\0') {
         avl->root = RemoveHelp(avl->root, k);
@@ -145,39 +161,6 @@ E remove(AVL* avl, int k) {
     return temp;
 }
 
-void PosOrderDelete(AVLNode* rt) {
-    if(rt != nullptr) {
-        PosOrderDelete(rt->left);
-        PosOrderDelete(rt->right);
-        delete rt;
-    }
-}
-
-void DeleteAVL(AVL* avl) {
-    PosOrderDelete(avl->root);
-    delete avl;
-}
-
-int main () {
-    AVL* avl = CreateAVL();
-
-    Insert(avl, 5, '_');   
-    Insert(avl, 3, 't');
-    Insert(avl, 7, 'e');
-    Insert(avl, 2, 's');
-    Insert(avl, 4, 't');
-    Insert(avl, 6, 'e');
-    Insert(avl, 8, '_');
-
-    //PreOrderPrint(avl);
-    //InOrderPrint(avl);
-    //PosOrderPrint(avl);
-
-    DeleteAVL(avl);
-    return 0;
-}
-
-/*
 void InOrderPrintHelp(AVLNode* rt) {
     if(rt != nullptr) {
         InOrderPrintHelp(rt->left);
@@ -215,8 +198,47 @@ void PosOrderPrintHelp(AVLNode* rt) {
 }
 
 void PosOrderPrint(AVL* avl) {
-    cout << "--------PRE-ORDER--------" << endl;
+    cout << "--------POS-ORDER--------" << endl;
     PosOrderPrintHelp(avl->root);
     cout << endl << "-------------------------" << endl << endl;
 }
-*/
+
+void PosOrderDelete(AVLNode* rt) {
+    if(rt != nullptr) {
+        PosOrderDelete(rt->left);
+        PosOrderDelete(rt->right);
+        delete rt;
+    }
+}
+
+void DeleteAVL(AVL* avl) {
+    PosOrderDelete(avl->root);
+    delete avl;
+}
+
+int main () {
+    AVL* avl = CreateAVL();
+
+    Insert(avl, 5, '_');   
+    Insert(avl, 3, 't');
+    Insert(avl, 7, 'e');
+    Insert(avl, 2, 's');
+    Insert(avl, 4, 't');
+    Insert(avl, 6, 'e');
+    Insert(avl, 1, '_');
+
+    PreOrderPrint(avl);
+    InOrderPrint(avl);
+    PosOrderPrint(avl);
+
+    Remove(avl, 4);
+    Remove(avl, 5);
+    Remove(avl, 2);
+
+    PreOrderPrint(avl);
+    InOrderPrint(avl);
+    PosOrderPrint(avl);
+
+    DeleteAVL(avl);
+    return 0;
+}
