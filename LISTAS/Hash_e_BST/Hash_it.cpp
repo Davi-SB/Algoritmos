@@ -135,7 +135,7 @@ int main() {
         PrintData(data, ht->count); // second line
 
         delete ht;  
-        //cout << endl; //sera????????  
+        //if(nTests) cout << endl; //sera????????  
     }
     return 0;
 }
