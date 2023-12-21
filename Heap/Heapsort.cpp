@@ -68,11 +68,6 @@ void HeapSort(Heap* heap, int k) { // ordena os K maiores elementos
     heap->size = temp;
 }
 
-    /*
-    for (int i = 1; i < heap->maxSize; i++) { // H[0] nao utilizado!!!!
-        heap->H[i] = i; //1,2,3...
-    }
-    */
 int main() {
     Heap* heap = HeapInit(MAX_SIZE);
     
