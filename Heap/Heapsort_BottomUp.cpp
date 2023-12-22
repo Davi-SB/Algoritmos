@@ -26,29 +26,31 @@ void DeleteHeap(Heap* heap) {
 
 void PrintHeap(Heap* heap) {
     for (int i = 1; i < (heap->size+1); i++) {
-        cout << "<[" << i << "], " << heap->H[i] << "> ";
+        cout << "<[" << i << "], " << heap->H[i] << ">  ";
     } cout << endl;
 }
 
-void HeapBottomUp(Heap* heap) {
-    for (int i = (int)(heap->size/2); i >= 1; i--) {        // nos internos
-        int k = i;                                          // posicao atual do no
-        int v = heap->H[k];                                 // valor do atual no
-        bool heaped = false;
+void Heapify(Heap* heap, int i) {
+    int k = i;                                          // posicao atual do no
+    int v = heap->H[k];                                 // valor do atual no
+    bool heaped = false;
 
-        while (!heaped && ((2*k) <= heap->size)) {          // encontra o lugar certo do valor
-            int j = 2*k;                                    // posicao do filho a esqueda
-            if((j < heap->size) && (heap->H[j] < heap->H[j+1]))  
-                j++;                                        // tem dois filhos && seleciona o maior deles
-            if(v >= heap->H[j]) heaped = true;              // heaped se valor atual eh >= o maior filho
-            else {                                          // otimizacao (evita o swaps)
-                heap->H[k] = heap->H[j];                    // coloca o maior filho em H[k]
-                k = j;                                      // atualiza k
-            }
-        }   
-        heap->H[k] = v; // termina os "swaps"
-    }
+    while (!heaped && ((2*k) <= heap->size)) {          // encontra o lugar certo do valor
+        int j = 2*k;                                    // posicao do filho a esqueda
+        if((j < heap->size) && (heap->H[j] < heap->H[j+1]))  
+            j++;                                        // tem dois filhos && seleciona o maior deles
+        if(v >= heap->H[j]) heaped = true;              // heaped se valor atual eh >= o maior filho
+        else {                                          // otimizacao (evita o swaps)
+            heap->H[k] = heap->H[j];                    // coloca o maior filho em H[k]
+            k = j;                                      // atualiza k
+        }
+    }   
+    heap->H[k] = v; // termina os "swaps"
     if(heap->H[0] != INT_MAX) cout << "CUIDADO" << endl;
+}
+
+void HeapBottomUp(Heap* heap) {
+    for (int i = (int)(heap->size/2); i >= 1; i--) Heapify(heap, i);
 }
 
 void HeapSort(Heap* heap, int k) { // ordena os K maiores elementos
@@ -62,7 +64,7 @@ void HeapSort(Heap* heap, int k) { // ordena os K maiores elementos
     while (k--) {
         swap(heap->H[1], heap->H[heap->size]); // manda a root (maior elemento) para o final do array
         heap->size--; // lazy deletion do maior elemento (ordenado)
-        HeapBottomUp(heap);
+        Heapify(heap, 1);
         PrintHeap(heap);
     } cout << endl;
     heap->size = temp;
