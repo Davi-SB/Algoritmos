@@ -37,9 +37,9 @@ void Heapify(Heap* heap, int i) {
 
     while (!heaped && ((2*k) <= heap->size)) {          // encontra o lugar certo do valor
         int j = 2*k;                                    // posicao do filho a esqueda
-        if((j < heap->size) && (heap->H[j] < heap->H[j+1]))  
+        if((j < heap->size) && (heap->H[j] < /*> para heap-min*/ heap->H[j+1]))  
             j++;                                        // tem dois filhos && seleciona o maior deles
-        if(v >= heap->H[j]) heaped = true;              // heaped se valor atual eh >= o maior filho
+        if(v >= /*<= para heap-min*/ heap->H[j]) heaped = true;              // heaped se valor atual eh >= o maior filho
         else {                                          // otimizacao (evita o swaps)
             heap->H[k] = heap->H[j];                    // coloca o maior filho em H[k]
             k = j;                                      // atualiza k
