@@ -68,10 +68,15 @@ void HeapTopDown(Heap* heap, int k) {
     heap->H[heap->size] = k;
     
     int i = heap->size;
-    while ((i > 1) && (heap->H[i] > heap->H[(i/2)])) { //filho maior q o pai
+    while ((i > 1) && (heap->H[i] < heap->H[(i/2)])) { //filho maior q o pai
         swap(heap->H[i], heap->H[(i/2)]);
         i /= 2;
     }
+
+    /*cout << "  ARRAY HEAP:";
+    for (int i = 1; i <= heap->size; i++) {
+        cout << " " << heap->H[i];
+    } cout << endl;*/
 }
 
 void HeapSort(Heap* heap, int k) { // ordena os K maiores elementos
@@ -88,6 +93,12 @@ void HeapSort(Heap* heap, int k) { // ordena os K maiores elementos
         //PrintHeap(heap);
     } // cout << endl;
     heap->size = temp;
+
+    /*cout << "ARRAY SORTED:";
+    for (int i = 1; i <= heap->size; i++) {
+        cout << " " << heap->H[i];
+    } cout << endl;*/
+    
 }
 
 int main() {
