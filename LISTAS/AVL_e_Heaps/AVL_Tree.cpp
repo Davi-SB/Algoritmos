@@ -3,6 +3,8 @@
 using namespace std;
 #define endl '\n'
 
+// SOLVED - https://www.spoj.com/problems/SDITSAVL/
+
 typedef struct avlnode {
     int key, height, subsize;
     avlnode *left, *right; 
