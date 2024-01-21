@@ -4,7 +4,7 @@ using namespace std;
 #define endl '\n'
 
 typedef struct avlnode {
-    int key, height, leftChildren, rightChildren;
+    int key, height, subsize;
     avlnode *left, *right; 
 } AVLNode;
 
@@ -17,7 +17,7 @@ AVLNode* CreateAVLNode(int k) {
     AVLNode* n = new AVLNode;
     n->key = k;
     n->height = -1;
-    n->leftChildren = n->rightChildren = 0;
+    n->subsize = 1; // conta com a root da subarvore
     n->left = n->right = nullptr;
     return n;
 } 
@@ -50,13 +50,14 @@ AVLNode* RightRotate(AVLNode* rt) {
     AVLNode *lr = l->right;
     l->right = rt;
     rt->left  = lr;
+
     rt->height = 1 + max(h(rt->left), h(rt->right));
+    rt->subsize = 1 + (rt->left ? rt->left->subsize : 0) + (rt->right ? rt->right->subsize : 0);
+
     l->height =  1 + max(h( l->left), h( l->right));
+    l->subsize = 1 + (l->left ? l->left->subsize : 0) + (l->right ? l->right->subsize : 0);
 
-    rt->leftChildren = (lr != nullptr) ? lr->leftChildren + lr->rightChildren + 1 : 0; // +1 para contar com lr
-    // leftChildren de l nao muda
-
-    return l; // nova raiz da subarvore em questao
+    return l; 
 }
 
 AVLNode* LeftRotate(AVLNode* rt) {
@@ -64,36 +65,33 @@ AVLNode* LeftRotate(AVLNode* rt) {
     AVLNode *rl = r->left;
     r->left  = rt;
     rt->right = rl;
+
     rt->height = 1 + max(h(rt->left), h(rt->right));
+    rt->subsize = 1 + (rt->left ? rt->left->subsize : 0) + (rt->right ? rt->right->subsize : 0);
+
     r->height =  1 + max(h( r->left), h( r->right));
+    r->subsize = 1 + (r->left ? r->left->subsize : 0) + (r->right ? r->right->subsize : 0);
 
-    r->leftChildren++;
-    rt->leftChildren = (rl != nullptr) ? rl->leftChildren + rl->rightChildren + 1 : 0;
-
-    return r; // nova raiz da subarvore em questao
+    return r; 
 }
 
 int GetBalance(AVLNode* rt) {
-    if(rt == NULL) return 0;
+    if(rt == nullptr) return 0;
     return (h(rt->left) - h(rt->right)); // balance factor
 }
 
 AVLNode* InsertHelp(AVLNode* rt, int k) {
     if(rt == nullptr) return CreateAVLNode(k);
-    if(rt->key > k) {
-        rt->left = InsertHelp(rt->left, k);
-        rt->leftChildren++;
-    }
-    else {
-        rt->right = InsertHelp(rt->right, k);
-        rt->rightChildren++;
-    }
+    if(rt->key > k) rt->left = InsertHelp(rt->left, k);
+    else rt->right = InsertHelp(rt->right, k);
 
     rt->height = 1 + max(h(rt->left), h(rt->right));
+    rt->subsize = 1 + (rt->left ? rt->left->subsize : 0) + (rt->right ? rt->right->subsize : 0);
     int balance = GetBalance(rt);
 
     if((balance < -1) && (k >= rt->right->key)) return LeftRotate(rt);
     if((balance >  1) && (k <  rt->left->key))  return RightRotate(rt);
+
     if((balance >  1) && (k >= rt->left->key)) {
         rt->left = LeftRotate(rt->left);
         return RightRotate(rt);
@@ -131,9 +129,11 @@ void DeleteAVL(AVL* avl) {
 int FindIndexHelp(AVLNode* rt, int k) {
     if(rt == nullptr) return -1;
 
-    if(k == rt->key) return rt->leftChildren;
-    else if (k < rt->key) return FindIndexHelp(rt->left, k);
-    else return (rt->leftChildren + 1) + FindIndexHelp(rt->right, k); // k > rt->key // tudo que esta a esqueda + o proprio node + index na subarvore
+    if(rt->key <= k) {
+        if(rt->left == nullptr) return (1 + FindIndexHelp(rt->right, k));
+        else return (1 + rt->left->subsize + FindIndexHelp(rt->right, k)); 
+    }
+    else return FindIndexHelp(rt->left, k);
 }
 
 int FindIndex(AVL* avl, int k) {
@@ -151,13 +151,14 @@ int main () {
         cin >> x;
         if(act == '1') Insert(avl, x);
         else { // act == '2' // search
-            int i = FindIndex(avl, x);
-            (i == -1) ? cout << "Data tidak ada" : cout << (i+1); cout << endl;
+            if(Find(avl, x) != INT_MIN) { // achou
+            cout << (1 + FindIndex(avl, x)) << endl;
+            }
+            else cout << "Data tidak ada" << endl;
         }
     }
-
     DeleteAVL(avl);
     return 0;
 }
-// g++ AVL_Tree.cpp -o AVLT
-// g++ AVL_Tree.cpp -o AVLT && ./AVLT < input.in
+// g++ AVL_Tree_copy.cpp -o AVLT
+// g++ AVL_Tree_copy.cpp -o AVLT && ./AVLT < input.in
