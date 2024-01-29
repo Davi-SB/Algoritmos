@@ -30,7 +30,7 @@ void PrintHeap(Heap* heap) {
     } cout << endl;
 }
 
-void HeapTopDown(Heap* heap, int k) {
+void HeapTopDown(Heap* heap, int k) { // insert
     heap->size++;
     heap->H[heap->size] = k;
     
