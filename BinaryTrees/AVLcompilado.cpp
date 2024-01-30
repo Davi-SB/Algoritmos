@@ -16,7 +16,7 @@ typedef struct {
 AVLNode* CreateAVLNode(int k, E e) {
     AVLNode* n = new AVLNode;
     n->key = k;
-    n->height = -1;
+    n->height = 0;
     n->element = e;
     n->subsize = 1; // conta com a root da subarvore
     n->left = n->right = nullptr;
