@@ -111,56 +111,6 @@ AVLNode* DeleteMin(AVLNode* rt) {
     return rt;
 }
 
-AVLNode* RemoveHelp(AVLNode* rt, int k) {
-    if(rt == nullptr) return nullptr;
-    if(rt->key > k) rt->left = RemoveHelp(rt->left, k);
-    else if(rt->key < k) rt->right = RemoveHelp(rt->right, k);
-    else {
-        if(rt->left == nullptr) { 
-            AVLNode* temp = rt->right;
-            delete rt;
-            return temp;
-        }
-        else if(rt->right == nullptr) {
-            AVLNode* temp = rt->left;
-            delete rt;
-            return temp;
-        }
-        else { // caso de duas subarvores nao vazias
-            AVLNode *temp = GetMin(rt->right);
-            rt->element = temp->element;
-            rt->key = temp->key;
-            rt->right = DeleteMin(rt->right);
-        }
-    }
-    
-    if(rt == nullptr) return nullptr;
-    
-    rt->height = 1 + max(h(rt->left), h(rt->right));
-    int balance = GetBalance(rt);
-
-    if((balance < -1) && (k >= rt->right->key)) return LeftRotate(rt);
-    if((balance >  1) && (k <  rt->left->key))  return RightRotate(rt);
-    if((balance >  1) && (k >= rt->left->key)) {
-        rt->left = LeftRotate(rt->left);
-        return RightRotate(rt);
-    }
-    if((balance < -1) && (k < rt->right->key)) {
-        rt->right = RightRotate(rt->right);
-        return LeftRotate(rt);
-    }
-    return rt;
-}
-
-E Remove(AVL* avl, int k) {
-    E temp = FindHelp(avl->root, k);
-    if(temp != '\0') {
-        avl->root = RemoveHelp(avl->root, k);
-        avl->count--;
-    }
-    return temp;
-}
-
 void InOrderPrintHelp(AVLNode* rt) {
     if(rt != nullptr) {
         InOrderPrintHelp(rt->left);
@@ -231,9 +181,20 @@ int main () {
     InOrderPrint(avl);
     PosOrderPrint(avl);
 
-    Remove(avl, 4);
-    Remove(avl, 5);
-    Remove(avl, 2);
+    DeleteAVL(avl);
+    return 0;
+}
+
+/*
+int main () {
+    AVL* avl = CreateAVL();
+
+    Insert(avl, 4, ' ');   
+    Insert(avl, 6, ' ');
+    Insert(avl, 8, ' ');
+    Insert(avl, 3, ' ');
+    Insert(avl, 2, ' ');
+    Insert(avl, 5, ' ');
 
     PreOrderPrint(avl);
     InOrderPrint(avl);
@@ -242,3 +203,4 @@ int main () {
     DeleteAVL(avl);
     return 0;
 }
+*/
