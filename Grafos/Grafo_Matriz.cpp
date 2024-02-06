@@ -8,7 +8,7 @@ private:
     int* mark;
     int numEdges, numNodes;
     const int UNVISITED = 0, VISITED = 1;
-    void (Graph:: *traverse)(int v) = nullptr;
+    void (Graph:: *traverse)(int) = nullptr;
 
     void pVerify(int *p)  { 
         if(p == nullptr) { cerr << "memory error" << endl; exit(1); } 
@@ -19,14 +19,14 @@ private:
     }
 
     int first(int currNode) {
-        for (int i = 0; i < (numNodes-1); i++) {
+        for (int i = 0; i < numNodes; i++) {
             if(matrix[currNode][i] != UNVISITED) return i; // ausencia
         }
         return numNodes;
     }
 
     int next(int currNode, int w) { // primeiro em que V se liga apos o  vertice W
-        for (int i = (w+1); i < (numNodes-1); i++) {
+        for (int i = (w+1); i < numNodes; i++) {
             if(matrix[currNode][i] != UNVISITED) return i; // ausencia
         }
         return numNodes;
@@ -41,19 +41,19 @@ private:
         return true;
     }
 
-    void preVisit(int currNode) { return; }
+    void preVisit(int currNode) { cout << currNode << "  "; }
 
     void posVisit(int currNode) { return; }
 
     void DFS(int currNode) {
-        // preVisit(currNode);
+        preVisit(currNode);
 
         setMark(currNode, VISITED);
         int nextNode = first(currNode);
 
         while(nextNode < numNodes) {
             if(getMark(nextNode) == UNVISITED)
-                DFS(nextNode);
+                DFS(nextNode); // recursao --> pilha implicita
             nextNode = next(currNode, nextNode);
         }
 
@@ -65,9 +65,9 @@ private:
         nodeQueue.push(start);
         setMark(start, VISITED);
 
-        while (nodeQueue.size() > 0) {
+        while (!nodeQueue.empty()) {
             int currNode = nodeQueue.front(); nodeQueue.pop();
-            // preVisit(currNode);
+            preVisit(currNode);
             int nextNode = first(currNode);
 
             while (nextNode < numNodes) {
@@ -92,7 +92,7 @@ public:
         this->numEdges = 0;
     }
     ~Graph() {
-        for (int i = 0; i < (numNodes-1); i++) delete[] matrix[i];
+        for (int i = 0; i < numNodes; i++) delete[] matrix[i];
         delete[] matrix;
         delete[] mark;
     }
@@ -108,14 +108,14 @@ public:
         matrix[i][j] = UNVISITED; // ausencia
     }
 
-    void graphTraverse(int v, char searchType[3]) { // "DFS" or "BFS" expected
-        if(searchType[0] == 'D') traverse = DFS;
-        if(searchType[0] == 'B') traverse = BFS;
+    void graphTraverse(int v, char searchType) { // "DFS" or "BFS" expected // 
+        if(searchType == 'D') traverse = &Graph::DFS;
+        else if(searchType == 'B') traverse = &Graph::BFS;
         else { cerr << "error searchType - graphTraverse" << endl; exit(1); }
 
-        for(int i = 0; i < (numEdges-1); i++) setMark(i, UNVISITED);
+        for(int i = 0; i < numNodes; i++) setMark(i, UNVISITED);
 
-        for(int i = 0; i < (numEdges-1); i++) {
+        for(int i = 0; i < numNodes; i++) {
             if(getMark(v) == UNVISITED) 
                 (this->*traverse)(v);
         }
@@ -124,7 +124,24 @@ public:
 
 int main () {
 
-    //
+    int n, q; cin >> n >> q;
+    Graph g(n);
+
+    while(q--) {
+        string op; cin >> op;
+        int i, j;
+        if(op == "add") {
+            cin >> i >> j;
+            g.setEdge(i, j, 1);
+            g.setEdge(j, i, 1);
+        }
+        else  {
+            cin >> i;
+            if(op == "BSF") g.graphTraverse(i, 'B');
+            else g.graphTraverse(i, 'D');
+            cout << endl;
+        }
+    }
 
     return 0;
-}
+} // g++ Grafo_Matriz.cpp -o GM && ./GM < input.in
