@@ -1,6 +1,6 @@
 #include <iostream>
 #include <queue>
-#include <vector>
+#include <list>
 using namespace std;
 
 class Node {
@@ -18,7 +18,7 @@ public:
 class Graph {
 private:
     //friend class Node;
-    vector<Node>* graphList;
+    list<Node>* graphList;
     int* mark;
     int numEdges, numNodes;
     const int UNVISITED = 0, VISITED = 1;
@@ -26,16 +26,23 @@ private:
 
     int first(int currNode) {
         if(!graphList[currNode].empty()) {
-            return graphList[currNode][0].index;
+            Node temp = graphList[currNode].front();
+            return temp.index;
         }
         return numNodes;
     }
 
-    int next(int currNode, int w) { // primeiro em que V se liga apos o vertice W
-        for(int i=0; i<graphList[currNode].size(); i++) {
-            if(graphList[currNode][i].index == w)
-                if((i+1) < graphList[currNode].size()) return graphList[currNode][i+1].index;
+    int next(int currNode, int w) { // primeiro em que V se liga apos o  vertice W
+        bool found = false;
+        auto it = graphList[currNode].begin();
+        
+        for(; (it != graphList[currNode].end()) && (!found); it++) {
+            if(it->index == w) found = true;
         }
+        if(!found) return numNodes; // saiu do for pq acabou a linked list e nao pq w foi encontrado
+
+        it++; // next()
+        if(it != graphList[currNode].end()) return it->index;
         return numNodes;
     }
 
@@ -48,7 +55,7 @@ private:
         return true;
     }
 
-    void preVisit(int currNode) { cout << currNode << "  "; }
+    void preVisit(int currNode) { currNode++; return; } // FAZ NADA
 
     void posVisit(int currNode) { currNode++; return; } // FAZ NADA
 
@@ -90,29 +97,37 @@ private:
 
 public:
     Graph(int size) {
-        this->graphList = new vector<Node>[size];
+        this->graphList = new list<Node>[size];
         this->mark = new int[size];
         this->numNodes = size;
         this->numEdges = 0;
     }
     ~Graph() {
+        for (int i = 0; i < (numNodes-1); i++) this->graphList[i].clear();
         delete[] this->graphList;
         delete[] this->mark;
     }
 
-    void setEdge(int a, int b, int weight) {
-        int i=0;
-        bool found = false;
-        for(; (i < graphList[a].size()) && (!found); i++) {
-            if(graphList[a][i].index == b) found = true;
-        } i--; // ajusta para o indice
+    void setEdge(int i, int j, int weight) {
+        //if(weight == 0) { cerr << "peso nulo"; exit(1); } // ???????????????
 
-        if(!found) {
-            Node temp(b, weight);
-            graphList[a].push_back(temp);
+        auto it = graphList[i].begin();
+        bool found = false;
+
+        for(; (it != graphList[i].end()) && (!found); it++) {
+            if(it->index > j) found = true;
+        }
+        
+        if(it != graphList[i].begin()) it--; // volta para a posicao certa para inserir 
+        
+        if((!graphList[i].empty()) && (it->index == j)) { // caso a aresta ja exista, apenas atualiza o peso
+            it->weight = weight;
+        }
+        else {
+            Node temp(j, weight);
+            graphList[i].insert(it, temp);
             numEdges++;
         }
-        else graphList[a][i].weight = weight;
     }
 
     void delEdge(int i, int j) {
