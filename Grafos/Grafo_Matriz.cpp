@@ -144,4 +144,4 @@ int main () {
     }
 
     return 0;
-} // g++ Grafo_Matriz.cpp -o GM && ./GM < input.in
+} // g++ Grafo_Matriz.cpp -o G && ./G < inputM.in

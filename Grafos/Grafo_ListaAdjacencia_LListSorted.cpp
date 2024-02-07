@@ -148,14 +148,14 @@ public:
         }
     }
 
-    void graphTraverse(int v, char searchType[3]) { // "DFS" or "BFS" expected
-        if(searchType[0] == 'D') traverse = DFS;
-        if(searchType[0] == 'B') traverse = BFS;
+    void graphTraverse(int v, char searchType) { // "DFS" or "BFS" expected // 
+        if(searchType == 'D') traverse = &Graph::DFS;
+        else if(searchType == 'B') traverse = &Graph::BFS;
         else { cerr << "error searchType - graphTraverse" << endl; exit(1); }
 
-        for(int i = 0; i < (numEdges-1); i++) setMark(i, UNVISITED);
+        for(int i = 0; i < numNodes; i++) setMark(i, UNVISITED);
 
-        for(int i = 0; i < (numEdges-1); i++) {
+        for(int i = 0; i < numNodes; i++) {
             if(getMark(v) == UNVISITED) 
                 (this->*traverse)(v);
         }

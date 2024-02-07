@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include <stack>
 #include <vector>
 using namespace std;
 
@@ -17,12 +18,17 @@ public:
 
 class Graph {
 private:
-    //friend class Node;
     vector<Node>* graphList;
     int* mark;
     int numEdges, numNodes;
     const int UNVISITED = 0, VISITED = 1;
+    
     void (Graph:: *traverse)(int v) = nullptr;
+    stack<int> stackToposort;
+
+    void checkNode(int nodeIndex) {
+        if((nodeIndex < 0) || (nodeIndex >= this->numNodes)) { cerr << "node out of bounds - checkNode" << endl; exit(1); }
+    }
 
     int first(int currNode) {
         if(!graphList[currNode].empty()) {
@@ -32,9 +38,13 @@ private:
     }
 
     int next(int currNode, int w) { // primeiro em que V se liga apos o vertice W
-        for(int i=0; i<graphList[currNode].size(); i++) {
-            if(graphList[currNode][i].index == w)
-                if((i+1) < graphList[currNode].size()) return graphList[currNode][i+1].index;
+        for(int i = 0; i < (int)graphList[currNode].size(); i++) {
+            if(graphList[currNode][i].index == w) {
+                if((i+1) < (int)graphList[currNode].size()) 
+                    return graphList[currNode][i+1].index;
+                else 
+                    return numNodes;
+            }
         }
         return numNodes;
     }
@@ -88,6 +98,20 @@ private:
         }
     }
 
+    void toposortHelp(int currNode) {
+        setMark(currNode, VISITED);
+
+        int nextNode = first(currNode);
+        while(nextNode < numNodes) {
+            if(getMark(nextNode) == UNVISITED) {
+                toposortHelp(nextNode);
+            }
+            nextNode = next(currNode, nextNode);
+        }
+
+        this->stackToposort.push(currNode);
+    }
+
 public:
     Graph(int size) {
         this->graphList = new vector<Node>[size];
@@ -101,55 +125,79 @@ public:
     }
 
     void setEdge(int a, int b, int weight) {
-        int i=0;
-        bool found = false;
-        for(; (i < graphList[a].size()) && (!found); i++) {
-            if(graphList[a][i].index == b) found = true;
-        } i--; // ajusta para o indice
+        checkNode(a); checkNode(b);
+        //int i=0;
+        //bool found = false;
+        //for(; (i < graphList[a].size()) && (!found); i++) if(graphList[a][i].index == b) found = true;
 
-        if(!found) {
-            Node temp(b, weight);
-            graphList[a].push_back(temp);
-            numEdges++;
-        }
-        else graphList[a][i].weight = weight;
+        //if(!found) {
+        Node temp(b, weight);
+        graphList[a].push_back(temp);
+        numEdges++;
+        //}
+        //else graphList[a][i].weight = weight;
     }
 
-    void delEdge(int i, int j) {
-        if(graphList[i].empty()) return;
+    void delEdge(int a, int b) {
+        checkNode(a); checkNode(b);
+        if(graphList[a].empty()) return;
 
-        auto it = graphList[i].begin();
+        int i=0;
         bool found = false;
-
-        for(; (it != graphList[i].end()) && (!found); it++) {
-            if(it->index == j) found = true;
-        }
+        for(; (i < (int)graphList[a].size()) && (!found); i++) 
+            if(graphList[a][i].index == b) found = true;
 
         if(found) {
-            //if(it != graphList[i].begin()) 
-            it--;
-            graphList[i].erase(it);
+            i--;
+            graphList[a].erase(graphList[a].begin() + i); // O(n)
             numEdges--;
         }
     }
 
-    void graphTraverse(int v, char searchType[3]) { // "DFS" or "BFS" expected
-        if(searchType[0] == 'D') traverse = DFS;
-        if(searchType[0] == 'B') traverse = BFS;
+    void graphTraverse(int v, char searchType) { // "DFS" or "BFS" expected // 
+        checkNode(v);
+        if(searchType == 'D') traverse = &Graph::DFS;
+        else if(searchType == 'B') traverse = &Graph::BFS;
         else { cerr << "error searchType - graphTraverse" << endl; exit(1); }
 
-        for(int i = 0; i < (numEdges-1); i++) setMark(i, UNVISITED);
+        for(int i = 0; i < numNodes; i++) setMark(i, UNVISITED);
 
-        for(int i = 0; i < (numEdges-1); i++) {
+        for(int i = 0; i < numNodes; i++) {
             if(getMark(v) == UNVISITED) 
                 (this->*traverse)(v);
         }
+    }
+
+    stack<int> toposort(int v) {
+        checkNode(v);
+        for(int i = 0; i < numNodes; i++) setMark(i, UNVISITED);
+
+        for(int i = 0; i < numNodes; i++) {
+            if(getMark(v) == UNVISITED) 
+                toposortHelp(i);
+        }
+
+        return stackToposort;
     }
 };
 
 int main () {
 
-    //
+    int n, m; cin >> n >> m;
+    Graph g(n);
+
+    int i, j;
+    while(m--) {
+        cin >> i >> j;
+        g.setEdge(i, j, 1);
+    }
+
+    stack<int> s = g.toposort(0);
+
+    while(!s.empty()) {
+        cout << s.top() << "  ";
+        s.pop();
+    } cout << endl;
 
     return 0;
-}
+} // g++ Grafo_ListaAdjacencia.cpp -o G && ./G < inputLA.in
