@@ -18,6 +18,10 @@ private:
         if(p == nullptr) { cerr << "memory error" << endl; exit(1); }
     }
 
+    void checkNode(int nodeIndex) {
+        if((nodeIndex < 0) || (nodeIndex >= this->numNodes)) { cerr << "node out of bounds - checkNode" << endl; exit(1); }
+    }
+
     int first(int currNode) {
         for (int i = 0; i < numNodes; i++) {
             if(matrix[currNode][i] != UNVISITED) return i; // ausencia
@@ -97,18 +101,20 @@ public:
         delete[] mark;
     }
 
-    void setEdge(int i, int j, int weight) {
-        if(weight == 0) { cerr << "peso nulo"; exit(1); }
+    void setEdge(int i, int j) {
+        checkNode(i); checkNode(j);
         if(matrix[i][j] == UNVISITED) numEdges++; // ausencia
-        matrix[i][j] = weight;
+        matrix[i][j] = VISITED;
     }
 
     void delEdge(int i, int j) {
+        checkNode(i); checkNode(j);
         if(matrix[i][j] != UNVISITED) numEdges--; // ausencia
         matrix[i][j] = UNVISITED; // ausencia
     }
 
     void graphTraverse(int v, char searchType) { // "DFS" or "BFS" expected // 
+        checkNode(v);
         if(searchType == 'D') traverse = &Graph::DFS;
         else if(searchType == 'B') traverse = &Graph::BFS;
         else { cerr << "error searchType - graphTraverse" << endl; exit(1); }
@@ -132,8 +138,8 @@ int main () {
         int i, j;
         if(op == "add") {
             cin >> i >> j;
-            g.setEdge(i, j, 1);
-            g.setEdge(j, i, 1);
+            g.setEdge(i, j);
+            g.setEdge(j, i);
         }
         else  {
             cin >> i;
