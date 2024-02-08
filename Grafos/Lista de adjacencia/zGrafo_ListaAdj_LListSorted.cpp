@@ -17,7 +17,6 @@ public:
 
 class Graph {
 private:
-    //friend class Node;
     list<Node>* graphList;
     int* mark;
     int numEdges, numNodes;
@@ -156,7 +155,7 @@ public:
         for(int i = 0; i < numNodes; i++) setMark(i, UNVISITED);
 
         for(int i = 0; i < numNodes; i++) {
-            if(getMark(v) == UNVISITED) 
+            if(getMark(v) == UNVISITED)
                 (this->*traverse)(v);
         }
     }

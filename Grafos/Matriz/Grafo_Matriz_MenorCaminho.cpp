@@ -97,10 +97,7 @@ public:
     void setEdge(int i, int j) {
         checkNode(i); checkNode(j);
         if(matrix[i][j] == 0) numEdges++; // ausencia
-        matrix[i][j] = 1;
-
-        if(matrix[j][i] == 0) numEdges++; // ausencia
-        matrix[j][i] = 1;
+        matrix[i][j] = 1; 
     }
 
     void delEdge(int i, int j) {
@@ -123,51 +120,40 @@ public:
 };
 
 int main () {
-    /*
-    int nodes, edges, i, j; 
-    cin >> nodes >> edges;
-    Graph g(nodes);
-
-    for (int k = 0; k < edges; k++) {
-        cin >> i >> j;
-        g.setEdge(i, j);
-    }
-    */
     int nodes = 13;
     Graph g(nodes);
     g.setEdge(1, 2);
     g.setEdge(1, 4);
-    //g.setEdge(2, 1);
+    g.setEdge(2, 1);
     g.setEdge(2, 3);
     g.setEdge(2, 4);
     g.setEdge(2, 7);
     g.setEdge(2, 11);
-    //g.setEdge(3, 2);
-    //g.setEdge(4, 1);
-    //g.setEdge(4, 2);
+    g.setEdge(3, 2);
+    g.setEdge(4, 1);
+    g.setEdge(4, 2);
     g.setEdge(4, 5);
-    //g.setEdge(5, 4);
+    g.setEdge(5, 4);
     g.setEdge(6, 8);
-    //g.setEdge(7, 2);
+    g.setEdge(7, 2);
     g.setEdge(7, 9);
-    //g.setEdge(8, 6);
-    //g.setEdge(9, 7);
+    g.setEdge(8, 6);
+    g.setEdge(9, 7);
     g.setEdge(9, 10);
-    //g.setEdge(10, 9);
+    g.setEdge(10, 9);
     g.setEdge(10, 12);
-    //g.setEdge(11, 2);
+    g.setEdge(11, 2);
     g.setEdge(11, 12);
-    //g.setEdge(12, 10);
-    //g.setEdge(12, 11);
+    g.setEdge(12, 10);
+    g.setEdge(12, 11);
 
     int* distance = g.MinDistances(2);
 
     for (int k = 0; k < nodes; k++) {
         cout << k << " --> " << distance[k] << endl;
     }
-    cout << endl << distance[10] << endl;
     return 0;
-} // g++ Grafo_Matriz_MenorCaminho.cpp -o G && ./G < inputM.in
+} // g++ Grafo_Matriz_MenorCaminho.cpp -o G && ./G
 
 /*
 13 24
