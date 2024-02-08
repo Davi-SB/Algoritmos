@@ -126,16 +126,9 @@ public:
 
     void setEdge(int a, int b, int weight) {
         checkNode(a); checkNode(b);
-        //int i=0;
-        //bool found = false;
-        //for(; (i < graphList[a].size()) && (!found); i++) if(graphList[a][i].index == b) found = true;
-
-        //if(!found) {
         Node temp(b, weight);
         graphList[a].push_back(temp);
         numEdges++;
-        //}
-        //else graphList[a][i].weight = weight;
     }
 
     void delEdge(int a, int b) {
@@ -176,7 +169,6 @@ public:
             if(getMark(v) == UNVISITED) 
                 toposortHelp(i);
         }
-
         return stackToposort;
     }
 };
@@ -195,8 +187,7 @@ int main () {
     stack<int> s = g.toposort(0);
 
     while(!s.empty()) {
-        cout << s.top() << "  ";
-        s.pop();
+        cout << s.top() << "  "; s.pop();
     } cout << endl;
 
     return 0;

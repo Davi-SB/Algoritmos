@@ -24,14 +24,14 @@ private:
 
     int first(int currNode) {
         for (int i = 0; i < numNodes; i++) {
-            if(matrix[currNode][i] != UNVISITED) return i; // ausencia
+            if(matrix[currNode][i] != 0) return i; // nao ausencia
         }
         return numNodes;
     }
 
     int next(int currNode, int w) { // primeiro em que V se liga apos o  vertice W
         for (int i = (w+1); i < numNodes; i++) {
-            if(matrix[currNode][i] != UNVISITED) return i; // ausencia
+            if(matrix[currNode][i] != 0) return i; // nao ausencia
         }
         return numNodes;
     }
@@ -51,7 +51,6 @@ private:
 
     void DFS(int currNode) {
         preVisit(currNode);
-
         setMark(currNode, VISITED);
         int nextNode = first(currNode);
 
@@ -60,7 +59,6 @@ private:
                 DFS(nextNode); // recursao --> pilha implicita
             nextNode = next(currNode, nextNode);
         }
-
         // posVisit(currNode);
     }
 
@@ -103,14 +101,14 @@ public:
 
     void setEdge(int i, int j) {
         checkNode(i); checkNode(j);
-        if(matrix[i][j] == UNVISITED) numEdges++; // ausencia
-        matrix[i][j] = VISITED;
+        if(matrix[i][j] == 0) numEdges++; // ausencia
+        matrix[i][j] = 1;
     }
 
     void delEdge(int i, int j) {
         checkNode(i); checkNode(j);
-        if(matrix[i][j] != UNVISITED) numEdges--; // ausencia
-        matrix[i][j] = UNVISITED; // ausencia
+        if(matrix[i][j] != 0) numEdges--; // nao ausencia
+        matrix[i][j] = 0; // ausencia
     }
 
     void graphTraverse(int v, char searchType) { // "DFS" or "BFS" expected // 
