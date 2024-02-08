@@ -113,7 +113,7 @@ public:
         checkNode(start);
         for(int i = 0; i < numNodes; i++){
             setMark(i, 0); // UNVISITED para esse caso
-            distance[i] = INT_MAX;
+            distance[i] = -1;
         } 
 
         BFSDistance(start);
