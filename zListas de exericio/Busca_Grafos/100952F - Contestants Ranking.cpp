@@ -40,12 +40,9 @@ private:
     }
 
     int next(int currNode, int w) { // primeiro em que V se liga apos o vertice W
-        for(int i = 0; i < (int)graphList[currNode].size(); i++) {
+        for(int i = 0; i < graphList[currNode].size()-1; i++) {
             if(graphList[currNode][i].index == w) {
-                if((i+1) < (int)graphList[currNode].size()) 
-                    return graphList[currNode][i+1].index;
-                else 
-                    return numNodes;
+                return graphList[currNode][i+1].index;
             }
         }
         return numNodes;
