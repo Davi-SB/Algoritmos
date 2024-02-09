@@ -23,9 +23,6 @@ private:
     int* distance;
     int numEdges, numNodes;
     const int UNVISITED = 0, VISITED = 1;
-    
-    void (Graph:: *traverse)(int v) = nullptr;
-    stack<int> stackToposort;
 
     void checkNode(int nodeIndex) {
         if((nodeIndex < 0) || (nodeIndex >= this->numNodes)) { cerr << "node out of bounds - checkNode" << endl; exit(1); }
