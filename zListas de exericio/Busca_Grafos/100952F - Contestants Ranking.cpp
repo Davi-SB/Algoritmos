@@ -192,8 +192,6 @@ int main () {
             if(distances[i].second != INT_MAX) cout << hashVOLTA[distances[i].first] << ' ' << distances[i].second << endl;
             else cout << hashVOLTA[distances[i].first] << ' ' << "undefined" << endl;
         }
-
     }
-
     return 0;
 } // g++ 100952F\ -\ Contestants\ Ranking.cpp -o G && ./G < inputsample.in
