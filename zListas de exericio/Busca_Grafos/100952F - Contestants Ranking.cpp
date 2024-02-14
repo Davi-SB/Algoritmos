@@ -2,10 +2,11 @@
 #include <queue>
 #include <stack>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <algorithm>
 #include <limits.h>
 using namespace std;
+#define endl '\n'
 
 // https://codeforces.com/problemset/gymProblem/100952/F
 
@@ -24,7 +25,7 @@ class Graph {
 private:
     vector<Node>* graphList;
     int* mark;
-    vector<pair<int, int>> distance; // <INDEX, DISTANCE>
+    vector<pair<string, int>> distance; // <INDEX, DISTANCE>
     int numEdges, numNodes, MAXNodes;
     const int UNVISITED = 0, VISITED = 1;
 
@@ -67,11 +68,11 @@ private:
             int currNode = nodeQueue.front(); 
             nodeQueue.pop();
             int nextNode = first(currNode);
-cout << "NextNode fora: " << nextNode << endl;
+            //cout << "NextNode fora: " << nextNode << endl;
 
             while (nextNode < numNodes) {
-cout << "NUMNODES: " << this->numNodes << endl;
-cout << endl << "CHEGOU AQUI" << endl; 
+                //cout << "NUMNODES: " << this->numNodes << endl;
+                //cout << endl << "CHEGOU AQUI" << endl; 
                 if(getMark(nextNode) == 0) {
                     setMark(nextNode, 1);
                     // na primeira vez que eh visitado, eh possivel definir a menor das distancias
@@ -79,7 +80,7 @@ cout << endl << "CHEGOU AQUI" << endl;
                     nodeQueue.push(nextNode);
                 }
                 nextNode = next(currNode, nextNode);
-cout << "NextNode dentro: " << nextNode << endl;
+                //cout << "NextNode dentro: " << nextNode << endl;
             }
         }
     }
@@ -106,9 +107,20 @@ public:
     int getNumNodes() {
         return this->numNodes;
     }
+
+    bool edgeExists(int a, int b) {
+        if(graphList[a].size() > graphList[b].size()) swap(a, b);
+
+        for(Node curr : graphList[a]) {
+            if(curr.index == b) return true;
+        }
+        return false;
+    }
  
     void setEdge(int a, int b) {
         checkNode(a); checkNode(b);
+        if(edgeExists(a, b)) return;
+
         Node temp1(b);
         graphList[a].push_back(temp1);
         numEdges++;
@@ -118,11 +130,11 @@ public:
         numEdges++;
     }
 
-    vector<pair<int, int>> MinDistances(int start) {
+    vector<pair<string, int>> MinDistances(int start) {
         checkNode(start);
         for(int i = 0; i < numNodes; i++) {
             setMark(i, 0); // UNVISITED para esse caso
-            distance[i] = {i, INT_MAX};
+            distance[i].second = INT_MAX;
         } 
         BFSDistance(start);
         // desse ponto, distance[i] == INT_MAX significa que nao ha como sair de start e chegar em i
@@ -130,15 +142,20 @@ public:
     }
 };
 
-bool isInMap(map<string, int> hashTable, string line) {
+bool compare(const pair<string, int>& a, const pair<string, int>& b) {
+    if (a.second != b.second) return a.second < b.second; // ordena por inteiros crescentes
+    else return a.first < b.first; // desempate por string crescente
+}
+
+bool isInMap(unordered_map<string, int> hashTable, string line) {
     return hashTable.find(line) != hashTable.end();
 }
 
 int main () {
     int T; cin >> T;
     while(T--) {
-        map<string, int> hashTable;
-        map<int, string> hashVOLTA;
+        unordered_map<string, int> hashTable;
+        unordered_map<int, string> hashVOLTA;
         Graph grafo(101*3); // pior caso do num maximo dado pela questao
         
         int numLines; cin >> numLines;
@@ -155,18 +172,6 @@ int main () {
                 }
             }
             
-                        // Iterando sobre todos os elementos do map
-                        cout << "Todos os elementos do hashTable:" << endl;
-                        for (pair<string, int> par : hashTable) {
-                            cout << par.first << ": " << par.second << endl;
-                        }
-
-                        // Iterando sobre todos os elementos do map
-                        cout << "Todos os elementos do hashVOLTA:" << endl;
-                        for (pair<int, string> par : hashVOLTA) {
-                            cout << par.first << ": " << par.second << endl;
-                        }
-
             // obs: a implementacao ja insere arestas nao-direcionadas
             grafo.setEdge(hashTable[line[0]], hashTable[line[1]]);
             grafo.setEdge(hashTable[line[0]], hashTable[line[2]]);
@@ -174,24 +179,16 @@ int main () {
 
         }
 
-        vector<pair<int, int>> distances = grafo.MinDistances(hashTable["Ahmad"]);   
+        vector<pair<string, int>> distances = grafo.MinDistances(hashTable["Ahmad"]); // <name, distance>
+        for (int i = 0; i < grafo.getNumNodes(); i++) distances[i].first = hashVOLTA[i]; // preenche o nome no par
+        
+        sort(distances.begin(), distances.begin() + grafo.getNumNodes(), compare);
 
-                        cout << "Todos os elementos do distances:" << endl;
-                        for (int W = 0; W < grafo.getNumNodes(); W++) cout << distances[W].first << ": " << distances[W].second << endl;
-
-        // Ordenando parcialmente o vetor com base nos inteiros (segundo elemento do par)
-        sort(distances.begin(), distances.begin() + grafo.getNumNodes(), [](const pair<int, int>& a, const pair<int, int>& b) {
-            return a.second < b.second;
-        });
-
-                        cout << "Todos os elementos do distances ORDENADO:" << endl;
-                        for (int W = 0; W < grafo.getNumNodes(); W++) cout << distances[W].first << ": " << distances[W].second << endl;
-       
         cout << grafo.getNumNodes() << endl;
         for (int i=0; i < grafo.getNumNodes(); i++) {
-            if(distances[i].second != INT_MAX) cout << hashVOLTA[distances[i].first] << ' ' << distances[i].second << endl;
-            else cout << hashVOLTA[distances[i].first] << ' ' << "undefined" << endl;
+            if(distances[i].second != INT_MAX) cout << distances[i].first << ' ' << distances[i].second << endl;
+            else cout << distances[i].first << " undefined" << endl;
         }
     }
     return 0;
-} // g++ 100952F\ -\ Contestants\ Ranking.cpp -o G && ./G < inputsample.in
+} // g++ 100952F\ -\ Contestants\ Ranking.cpp -o GA && ./GA < input.in > output.out
