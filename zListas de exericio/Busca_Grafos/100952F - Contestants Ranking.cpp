@@ -5,25 +5,15 @@
 #include <unordered_map>
 #include <algorithm>
 #include <limits.h>
+#include <set>
 using namespace std;
 #define endl '\n'
 
-// https://codeforces.com/problemset/gymProblem/100952/F
-
-class Node {
-private:
-    friend class Graph;
-    int index; // peso removido para essa questao
-public:
-    Node(int index) {
-        this->index = index;
-    }
-    ~Node() {}
-};
+// SOLVED - https://codeforces.com/problemset/gymProblem/100952/F
 
 class Graph {
 private:
-    vector<Node>* graphList;
+    vector<int>* graphList;
     int* mark;
     vector<pair<string, int>> distance; // <INDEX, DISTANCE>
     int numEdges, numNodes, MAXNodes;
@@ -35,15 +25,15 @@ private:
 
     int first(int currNode) {
         if(!graphList[currNode].empty()) {
-            return graphList[currNode][0].index;
+            return graphList[currNode][0];
         }
         return numNodes;
     }
 
     int next(int currNode, int w) { // primeiro em que V se liga apos o vertice W
         for(int i = 0; i < graphList[currNode].size()-1; i++) {
-            if(graphList[currNode][i].index == w) {
-                return graphList[currNode][i+1].index;
+            if(graphList[currNode][i] == w) {
+                return graphList[currNode][i+1];
             }
         }
         return numNodes;
@@ -68,11 +58,8 @@ private:
             int currNode = nodeQueue.front(); 
             nodeQueue.pop();
             int nextNode = first(currNode);
-            //cout << "NextNode fora: " << nextNode << endl;
 
             while (nextNode < numNodes) {
-                //cout << "NUMNODES: " << this->numNodes << endl;
-                //cout << endl << "CHEGOU AQUI" << endl; 
                 if(getMark(nextNode) == 0) {
                     setMark(nextNode, 1);
                     // na primeira vez que eh visitado, eh possivel definir a menor das distancias
@@ -80,14 +67,13 @@ private:
                     nodeQueue.push(nextNode);
                 }
                 nextNode = next(currNode, nextNode);
-                //cout << "NextNode dentro: " << nextNode << endl;
             }
         }
     }
 
 public:
     Graph(int size) {
-        this->graphList = new vector<Node>[size];
+        this->graphList = new vector<int>[size];
         this->mark = new int[size];
         this->distance.resize(size);
         this->MAXNodes = size;
@@ -107,27 +93,11 @@ public:
     int getNumNodes() {
         return this->numNodes;
     }
-
-    bool edgeExists(int a, int b) {
-        if(graphList[a].size() > graphList[b].size()) swap(a, b);
-
-        for(Node curr : graphList[a]) {
-            if(curr.index == b) return true;
-        }
-        return false;
-    }
  
     void setEdge(int a, int b) {
         checkNode(a); checkNode(b);
-        if(edgeExists(a, b)) return;
-
-        Node temp1(b);
-        graphList[a].push_back(temp1);
-        numEdges++;
-
-        Node temp2(a);
-        graphList[b].push_back(temp2);
-        numEdges++;
+        graphList[a].push_back(b);
+        graphList[b].push_back(a);
     }
 
     vector<pair<string, int>> MinDistances(int start) {
@@ -139,6 +109,25 @@ public:
         BFSDistance(start);
         // desse ponto, distance[i] == INT_MAX significa que nao ha como sair de start e chegar em i
         return distance;
+    }
+
+    vector<int> removeRepeated(vector<int> vec) {
+        set<int> newSet;
+        vector<int> resultado;
+
+        for (int elemento : vec) {
+            if (newSet.find(elemento) == newSet.end()) {
+                newSet.insert(elemento);
+                resultado.push_back(elemento);
+            }
+        }
+        return resultado;
+    }
+
+    void reduceGraph() {
+        for (int i = 0; i < numNodes; i++) {
+            graphList[i] = removeRepeated(graphList[i]);
+        } 
     }
 };
 
@@ -178,6 +167,8 @@ int main () {
             grafo.setEdge(hashTable[line[1]], hashTable[line[2]]);   
 
         }
+
+        grafo.reduceGraph();
 
         vector<pair<string, int>> distances = grafo.MinDistances(hashTable["Ahmad"]); // <name, distance>
         for (int i = 0; i < grafo.getNumNodes(); i++) distances[i].first = hashVOLTA[i]; // preenche o nome no par
