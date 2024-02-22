@@ -62,20 +62,11 @@ private:
         return Node(numNodes, numNodes);
     }
 
-    void setMark(int currNode, int state) { 
-        mark[currNode] = state;
-    }
-    
-    bool getMark(int currNode) {
-        if(mark[currNode] == VISITED) return true;
-        return false;
-    }
-
     void dijkstra(int start) {
         for (int i = 0; i < numNodes; i++) { // inicializacao
             distance[i] = INT_MAX;
             parent[i] = -1;
-            setMark(i, !VISITED);
+            mark[i] = !VISITED;
         }
         priority_queue< Trio, vector<Trio>, greater<Trio> > pq;
         
@@ -87,19 +78,18 @@ private:
             do {
                 if(pq.empty()) return; // se a heap esta vazia, o algoritmo ja pode terminar
                 t = pq.top(); pq.pop();
-            } while(getMark(t.curr) == VISITED);
-            setMark(t.curr, VISITED);
+            } while(mark[t.curr] == VISITED);
+            mark[t.curr] = VISITED;
             parent[t.curr] = t.prev;
 
-            Node w = first(t.curr);
-            while(w.index < numNodes) {
-                int newPathWeight = w.weight; // variavel evita duas buscas
-                if(distance[w.index] > (distance[t.curr] + newPathWeight) && (getMark(w.index) == !VISITED)) {
-                    distance[w.index] = distance[t.curr] + newPathWeight;
-                    pq.push(Trio(t.curr, w.index, distance[w.index]));
+            Node n = first(t.curr);
+            while(n.index < numNodes) {
+                if(distance[n.index] > (distance[t.curr] + n.weight) && (mark[n.index] == !VISITED)) {
+                    distance[n.index] = distance[t.curr] + n.weight;
+                    pq.push(Trio(t.curr, n.index, distance[n.index]));
                 }
-                w = next(t.curr, w.index);
-                //cout << "chegou" << endl;
+                n = next(t.curr, n.index);
+                cout << "chegou" << endl;
             }
         }
     }
@@ -107,7 +97,6 @@ private:
     vector<Node> removeRepeated(vector<Node> vec) {
         set<Node> newSet;
         vector<Node> resultado;
-
         for (Node elemento : vec) {
             if (newSet.find(elemento) == newSet.end()) {
                 newSet.insert(elemento);
@@ -164,7 +153,7 @@ int main () {
             servers.setEdge(i, j, weight);
             servers.setEdge(j, i, weight);
         }
-        servers.reduceGraph();
+        // servers.reduceGraph();
         int distance = servers.getDistance(origin, destination);
         cout << "Case #" << i+1 << ": ";
         if(distance != INT_MAX) cout << distance << endl;

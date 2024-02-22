@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/Estudos/Faculdade/codes/.vscode/Algoritmos/Grafos/Dijkstra",
-      "program": "d:/Estudos/Faculdade/codes/.vscode/Algoritmos/Grafos/Dijkstra/build/Debug/outDebug",
+      "cwd": ".",
+      "program": "build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
