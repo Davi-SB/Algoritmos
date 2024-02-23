@@ -4,6 +4,8 @@
 #include <queue>
 using namespace std;
 
+// SOLVED - https://www.udebug.com/UVa/10986
+
 class Node {
 private:
     friend class Graph;
