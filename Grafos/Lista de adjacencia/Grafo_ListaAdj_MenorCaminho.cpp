@@ -4,24 +4,12 @@
 #include <vector>
 using namespace std;
 
-class Node {
-private:
-    friend class Graph;
-    int index, weight;
-public:
-    Node(int index, int weight) {
-        this->index = index;
-        this->weight = weight;
-    }
-    ~Node() {}
-};
-
 class Graph {
 private:
-    vector<Node>* graphList;
+    vector<int>* graphList;
     int* mark;
     int* distance;
-    int numEdges, numNodes;
+    int numEdges, numNodes, itNext;
     const int UNVISITED = 0, VISITED = 1;
 
     void checkNode(int nodeIndex) {
@@ -29,21 +17,16 @@ private:
     }
 
     int first(int currNode) {
-        if(!graphList[currNode].empty()) {
-            return graphList[currNode][0].index;
-        }
+        if(!graphList[currNode].empty()) return graphList[currNode][0];
         return numNodes;
     }
 
-    int next(int currNode, int w) { // primeiro em que V se liga apos o vertice W
-        for(int i = 0; i < (int)graphList[currNode].size(); i++) {
-            if(graphList[currNode][i].index == w) {
-                if((i+1) < (int)graphList[currNode].size()) 
-                    return graphList[currNode][i+1].index;
-                else 
-                    return numNodes;
-            }
+    int next(int currNode) {
+        if(itNext+1 < graphList[currNode].size()) {
+            itNext++;
+            return graphList[currNode][itNext];
         }
+        itNext = 0;
         return numNodes;
     }
 
@@ -78,18 +61,19 @@ private:
                     //
                     nodeQueue.push(nextNode);
                 }
-                nextNode = next(currNode, nextNode);
+                nextNode = next(currNode);
             }
         }
     }
 
 public:
     Graph(int size) {
-        this->graphList = new vector<Node>[size];
+        this->graphList = new vector<int>[size];
         this->mark = new int[size];
         this->distance = new int[size];
         this->numNodes = size;
         this->numEdges = 0;
+        this->itNext = 0;
     }
     ~Graph() {
         delete[] this->graphList;
@@ -99,8 +83,7 @@ public:
 
     void setEdge(int a, int b, int weight) {
         checkNode(a); checkNode(b);
-        Node temp(b, weight);
-        graphList[a].push_back(temp);
+        graphList[a].push_back(b);
         numEdges++;
     }
 
@@ -111,7 +94,7 @@ public:
         int i=0;
         bool found = false;
         for(; (i < (int)graphList[a].size()) && (!found); i++) 
-            if(graphList[a][i].index == b) found = true;
+            if(graphList[a][i] == b) found = true;
 
         if(found) {
             i--;
@@ -132,7 +115,7 @@ public:
     }
 };
 
-int main () {
+int main () { // essa implementação não considera multigrafos visto que isso nao faria sentido sem arestas ponderadas
     int nodes = 13;
     Graph g(nodes);
     g.setEdge(1, 2, 1);

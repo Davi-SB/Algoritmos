@@ -20,7 +20,7 @@ class Graph {
 private:
     vector<Node>* graphList;
     int* mark;
-    int numEdges, numNodes;
+    int numEdges, numNodes, itNext;
     const int UNVISITED = 0, VISITED = 1;
     
     void (Graph:: *traverse)(int v) = nullptr;
@@ -31,21 +31,16 @@ private:
     }
 
     int first(int currNode) {
-        if(!graphList[currNode].empty()) {
-            return graphList[currNode][0].index;
-        }
+        if(!graphList[currNode].empty()) return graphList[currNode][0].index;
         return numNodes;
     }
 
-    int next(int currNode, int w) { // primeiro em que V se liga apos o vertice W
-        for(int i = 0; i < (int)graphList[currNode].size(); i++) {
-            if(graphList[currNode][i].index == w) {
-                if((i+1) < (int)graphList[currNode].size()) 
-                    return graphList[currNode][i+1].index;
-                else 
-                    return numNodes;
-            }
+    int next(int currNode) {
+        if(itNext+1 < graphList[currNode].size()) {
+            itNext++;
+            return graphList[currNode][itNext].index;
         }
+        itNext = 0;
         return numNodes;
     }
 
@@ -71,7 +66,7 @@ private:
         while(nextNode < numNodes) {
             if(getMark(nextNode) == UNVISITED)
                 DFS(nextNode);
-            nextNode = next(currNode, nextNode);
+            nextNode = next(currNode);
         }
 
         // posVisit(currNode);
@@ -92,7 +87,7 @@ private:
                     setMark(nextNode, VISITED);
                     nodeQueue.push(nextNode);
                 }
-                nextNode = next(currNode, nextNode);
+                nextNode = next(currNode);
             }
             // posVisit(currNode);
         }
@@ -106,7 +101,7 @@ private:
             if(getMark(nextNode) == UNVISITED) {
                 toposortHelp(nextNode);
             }
-            nextNode = next(currNode, nextNode);
+            nextNode = next(currNode);
         }
 
         this->stackToposort.push(currNode);
@@ -118,6 +113,7 @@ public:
         this->mark = new int[size];
         this->numNodes = size;
         this->numEdges = 0;
+        this->itNext = 0;
     }
     ~Graph() {
         delete[] this->graphList;
@@ -126,8 +122,7 @@ public:
 
     void setEdge(int a, int b, int weight) {
         checkNode(a); checkNode(b);
-        Node temp(b, weight);
-        graphList[a].push_back(temp);
+        graphList[a].push_back(Node(b, weight));
         numEdges++;
     }
 
