@@ -1,26 +1,22 @@
 #include <iostream>
-#include <vector>
 using namespace std;
 
-using ll = unsigned long int;
+int fibonacci(int n) {
+    int a = 0, b = 1;
+    if (n == 0 || n == 1) return n;
 
-ll mod(int n) { return n/*%1000000007*/; }
-
-ll fib(int n, vector<ll>& memo) {
-    if(memo[n] != 0) return memo[n];
-    if((n == 1) || (n == 2)) {
-        memo[n] = 1;
-        return memo[n];
+    for (int i = 2; i <= n; i++) {
+        int temp = a + b;
+        a = b;
+        b = temp;
     }
-    if(!n) return 0;
-    int result = (fib(n-1, memo) + fib(n-2, memo));
-    memo[n] = mod(result); // memoization step
-    return memo[n];
+    return b;
 }
 
 int main() {
-    int n; cin >> n;
-    vector<ll> memo; memo.resize(n+1); // 1-based array
-    cout << fib(n, memo) << endl;
+    int n;
+    cout << "Digite o valor de n: ";
+    cin >> n;
+    cout << "O " << n << "-esimo elemento da sequência de Fibonacci eh: " << fibonacci(n) << endl;
     return 0;
-} // 0 1 1 2 3 5 8
+}
