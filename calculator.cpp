@@ -15,7 +15,7 @@ int main() {
     } cout << endl;
 
     for (int i = 0; i < 12; i++) sum += vec[i];
-    cout << "NOTA:" << (int)(sum/12) << endl;
+    cout << "NOTA:" << (sum/12) << endl;
     return 0;
 } // g++ calculator.cpp -o calc && ./calc < input.in
 
@@ -33,4 +33,7 @@ int main() {
 100
 100
 90
+100
+100
+100
 */
