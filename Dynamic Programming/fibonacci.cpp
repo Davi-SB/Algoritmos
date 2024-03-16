@@ -14,9 +14,8 @@ int fibonacci(int n) {
 }
 
 int main() {
-    int n;
     cout << "Digite o valor de n: ";
-    cin >> n;
-    cout << "O " << n << "-esimo elemento da sequência de Fibonacci eh: " << fibonacci(n) << endl;
+    int n; cin >> n;
+    cout << "O " << n << "-esimo elemento da sequencia de Fibonacci eh: " << fibonacci(n) << endl;
     return 0;
 }
