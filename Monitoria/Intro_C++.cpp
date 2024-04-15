@@ -3,20 +3,7 @@ using namespace std;
 
 // define
 
-// funcoes
-bool divisivel(int a, int b) {
-    return (a % b == 0);
-}
 
-void clear(int arr[], int tam) {
-    for (int i = 0; i < tam; i++) {
-        arr[i] = 0;
-    }
-}
-
-void incrementa(int &num) { // uso do '&' indica passagem por referencia, permitindo que a funcao modifique diretamente o valor da variavel original
-    num++; // num += 1;
-}
 
 int main() {
     // declaracao ---------------------------------------
@@ -102,7 +89,20 @@ int main() {
     vetorR2 arrayV[10];
     arrayV[5].x = 5;
 
-    // funcoes (acima da main()) ---------------------------------------
+    // funcoes
+    bool divisivel(int a, int b) {
+        return (a % b == 0);
+    }
+
+    void clear(int arr[], int tam) {
+        for (int i = 0; i < tam; i++) {
+            arr[i] = 0;
+        }
+    }
+
+    void incrementa(int &num) { // uso do '&' indica passagem por referencia, permitindo que a funcao modifique diretamente o valor da variavel original
+        num++; // num += 1;
+    }
 
     // ponteiro/alocacao ---------------------------------------
     int *ptr = new int; // aloca espaço para um inteiro na memoria
