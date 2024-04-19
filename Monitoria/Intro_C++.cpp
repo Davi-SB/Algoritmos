@@ -30,24 +30,6 @@ int main() {
         }
     }
 
-    int x = ((caractere == 'a') ? 32 : 54); // (<condicao>) ? <caso sim> : <caso nao>;
-
-    int opcao = 2;
-    switch (opcao) {
-        case 1:
-            cout << "opcao 1" << endl; // '\n'
-            break;
-        case 2:
-            cout << "opcao 2" << endl;
-            break;
-        case 3:
-            cout << "opcao 3" << endl;
-            break;
-        default:
-            cout << "opcao invalida" << endl;
-            break;
-    }
-
     // array/matriz ---------------------------------------
     int array[5] = {0, 1, 2, 3, 4}; // essa atribuicao com uso de chaves so funciona na declaracao
     int tamArray = (sizeof(array)/sizeof(int));
