@@ -33,6 +33,7 @@ Condidionais
 	não existe elif, apenas else if
 
 Arrays e Matrizes
+	conjunto de dados DO MESMO TIPO
 	linear na memória
 	inicialização
 	invasão de memória (comportamento inesperado ou segfault)
@@ -49,5 +50,18 @@ loops
 	
 Questão 2:
 
-input eh N (numero de alunos) seguido de N de notas
+input: tamanho N (N <= 30) do array em seguida dos N elementos dele
+output: para cada elemento desse array, imprima 0 se ele for uma letra maiuscula, 1 se for uma letra minúscula e 3 para o restante dos caracteres. Entretanto, imprima o novo array composto por 0, 1 e 3 INVERTIDO
   
+|Sample #1:
+input:
+	5
+	Davi!
+
+Transformando o array em 0, 1 e 2 seguindo as regras:
+	01113
+
+Imprimindo em ordem invertida:
+	31110
+
+Output: 31110

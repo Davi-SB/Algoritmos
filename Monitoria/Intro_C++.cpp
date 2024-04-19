@@ -2,9 +2,6 @@
 using namespace std;
 
 // define
-
-
-
 int main() {
     // declaracao ---------------------------------------
     bool booleano;
@@ -72,7 +69,7 @@ int main() {
     arrayV[5].x = 5;
 
     // funcoes
-    bool divisivel(int a, int b) {
+    /*bool divisivel(int a, int b) {
         return (a % b == 0);
     }
 
@@ -84,7 +81,7 @@ int main() {
 
     void incrementa(int &num) { // uso do '&' indica passagem por referencia, permitindo que a funcao modifique diretamente o valor da variavel original
         num++; // num += 1;
-    }
+    }*/
 
     // ponteiro/alocacao ---------------------------------------
     int *ptr = new int; // aloca espaço para um inteiro na memoria
@@ -100,3 +97,23 @@ int main() {
 
     return 0;
 }
+
+/*
+
+input: tamanho N (N <= 30) do array em seguida dos N elementos dele
+output: para cada elemento desse array, imprima 0 se ele for uma letra maiuscula, 1 se for uma letra minúscula e 3 para o restante dos caracteres. Entretanto, imprima o novo array composto por 0, 1 e 3 INVERTIDO
+  
+|Sample #1:
+input:
+	5
+	Davi!
+
+Transformando o array em 0, 1 e 2 seguindo as regras:
+	01113
+
+Imprimindo em ordem invertida:
+	31110
+
+Output: 31110
+
+*/
