@@ -1,0 +1,53 @@
+Questão 1: 
+
+Dois numeros de input, output é a média deles.
+- nota 1 e 2 são float
+- Mostrar printf/scanf e cin/cout
+- Mostrar como fazer criando uma variavel pra guardar o valor
+- Mostrar o que acontece com essa variavel delcarada como um int
+- Lembrar de deixar comentado o comando de compilar
+
+#include <stdio.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+  float nota1, nota2;
+  float media;
+
+  // scanf("%f %f", &nota1, &nota2);
+  // media = (nota1 + nota2)/2.0f;
+  // printf("MEDIA: %f\n", media);
+
+  cin >> nota1, nota2;
+  media = (nota1 + nota2)/2.0f;
+  cout << "MEDIA: " << media << '\n'; 
+
+  return 0;
+} // g++ teste.cpp -o media.exe
+
+Condidionais
+	Escopo
+	teste lógico avalia o valor booleano da expressão
+	==, =
+	não existe elif, apenas else if
+
+Arrays e Matrizes
+	linear na memória
+	inicialização
+	invasão de memória (comportamento inesperado ou segfault)
+	quantas dimensões quiser
+
+loops
+	while
+	do while
+	for(init; condidition; update) (usar contador em vez de i no começo)
+	usar contagem regressiva para mostrar os loops funcionando
+	envolver iterar array
+	scanf/printf, cin/cout em arrays
+	enfatizar chat gpt!!!!!
+	
+Questão 2:
+
+input eh N (numero de alunos) seguido de N de notas
+  
