@@ -23,7 +23,7 @@ int main() {
     Input: uma linha composta por um numero inteiro, um float e um caractere, nessa ordem
 
     19 10.3 d    
-    */
+    */          
     int inteiro;
     float decimal;
     char caractere;
